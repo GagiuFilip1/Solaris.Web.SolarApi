@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
@@ -7,9 +9,9 @@ namespace Solaris.Web.SolarApi.Core.Services.Interfaces
 {
     public interface IPlanetService
     {
-        Task CreateSolarSystemAsync(Planet planet);
-        Task UpdateSolarSystemAsync(Planet planet);
-        Task DeleteSolarSystemAsync(Planet planet);
-        Task SearchSolarSystemAsync(Pagination pagination, Ordering ordering, IFilter<Planet> filter);
+        Task CreatePlanetAsync(Planet planet);
+        Task UpdatePlanetAsync(Planet planet);
+        Task DeletePlanetAsync(Guid id);
+        Task<Tuple<int, List<Planet>>> SearchPlanetAsync(Pagination pagination, Ordering ordering, IFilter<Planet> filter);
     }
 }

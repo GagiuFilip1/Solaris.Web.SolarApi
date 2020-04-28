@@ -52,7 +52,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 var validationError = solarSystem.Validate();
                 if (validationError.Any())
                     throw new ValidationException($"A validation exception was raised while trying to update a solar system : {JsonConvert.SerializeObject(validationError, Formatting.Indented)}");
-
+                await EnsureSolarSystemExistAsync(solarSystem.Id);
                 await m_repository.UpdateAsync(solarSystem);
             }
             catch (ValidationException e)
@@ -69,15 +69,9 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
         {
             try
             {
-                var (_, searchResult) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
-                {
-                    SearchTerm = id.ToString()
-                });
+                var solarSystem = await EnsureSolarSystemExistAsync(id);
 
-                if (!searchResult.Any())
-                    throw new ValidationException("No Solar System was found for the specified Id");
-
-                await m_repository.DeleteAsync(searchResult.First());
+                await m_repository.DeleteAsync(solarSystem);
             }
             catch (ValidationException e)
             {
@@ -101,6 +95,18 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             }
 
             return default;
+        }
+        
+        private async Task<SolarSystem> EnsureSolarSystemExistAsync(Guid id)
+        {
+            var (_, searchResult) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            {
+                SearchTerm = id.ToString()
+            });
+
+            if (!searchResult.Any())
+                throw new ValidationException("No Solar System was found for the specified Id");
+            return searchResult.First();
         }
     }
 }

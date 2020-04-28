@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Solaris.Web.SolarApi.Infrastructure.CommonHelpers
+namespace Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces
 {
     public interface IIdentifier
     {

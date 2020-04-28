@@ -2,25 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Pomelo.EntityFrameworkCore.MySql.Storage;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Ioc
 {
-    public static class DependencyInjector
+    public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection Services { get; set; }
-        private static List<Assembly> Assemblies { get; set; }
+        private static IServiceCollection Services { get; set; }
+        private static List<Assembly> Assemblies { get; }
         private const string SOLUTION_NAME = "Solaris";
 
-        static DependencyInjector()
+        static ServiceCollectionExtensions()
         {
             Assemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(t => t.FullName.Contains(SOLUTION_NAME))
                 .ToList();
         }
 
+        public static void InjectMySqlDbContext<TContext>(this IServiceCollection collection, string connectionString, string assembly) where TContext : DbContext
+        {
+            collection.AddDbContext<TContext>(options =>
+                options.UseMySql(connectionString,
+                    b => b.MigrationsAssembly(assembly)
+                        .ServerVersion(new ServerVersion(new Version(5, 7, 12)))
+                        .CharSet(CharSet.Latin1)
+                ));
+        }
+
         public static void InjectForNamespace(this IServiceCollection collection, string nameSpace)
         {
+            Services = collection;
             InjectDependenciesForAssembly(Assemblies.FirstOrDefault(t => nameSpace.Contains(t.GetName().Name)), nameSpace);
         }
 

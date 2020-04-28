@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Storage;
 using Solaris.Web.SolarApi.Core.Data;
+using Solaris.Web.SolarApi.Core.Repositories.Implementations;
+using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Presentation
@@ -31,13 +33,7 @@ namespace Solaris.Web.SolarApi.Presentation
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-                options.UseMySql(Configuration[CONNECTION_STRING_PATH],
-                    b => b.MigrationsAssembly(MIGRATION_ASSEMBLY)
-                        .ServerVersion(new ServerVersion(new Version(5, 7, 12)))
-                        .CharSet(CharSet.Latin1)
-                ));
-
+            services.InjectMySqlDbContext<DataContext>(Configuration[CONNECTION_STRING_PATH], MIGRATION_ASSEMBLY);
             services.InjectForNamespace(REPOSITORIES_NAMESPACE);
             services.InjectForNamespace(SERVICES_NAMESPACE);
         }

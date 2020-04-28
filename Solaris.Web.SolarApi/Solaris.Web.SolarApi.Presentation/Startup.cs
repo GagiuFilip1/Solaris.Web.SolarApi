@@ -12,16 +12,17 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Storage;
 using Solaris.Web.SolarApi.Core.Data;
+using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Presentation
 {
     public class Startup
     {
         private IConfiguration Configuration { get; }
-        private const string SOLUTION_NAME = "Solaris";
         private const string CONNECTION_STRING_PATH = "ConnectionStrings:SolarisApi";
         private const string MIGRATION_ASSEMBLY = "Solaris.Web.SolarApi.Presentation";
-        private List<Assembly> Assemblies { get; set; }
+        private const string REPOSITORIES_NAMESPACE = "Solaris.Web.SolarApi.Core.Repositories.Implementations";
+        private const string SERVICES_NAMESPACE = "Solaris.Web.SolarApi.Core.Services.Implementations";
 
         public Startup(IConfiguration configuration)
         {
@@ -30,16 +31,15 @@ namespace Solaris.Web.SolarApi.Presentation
 
         public void ConfigureServices(IServiceCollection services)
         {
-            Assemblies = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(t => t.FullName.Contains(SOLUTION_NAME))
-                .ToList();
-
             services.AddDbContext<DataContext>(options =>
                 options.UseMySql(Configuration[CONNECTION_STRING_PATH],
                     b => b.MigrationsAssembly(MIGRATION_ASSEMBLY)
                         .ServerVersion(new ServerVersion(new Version(5, 7, 12)))
                         .CharSet(CharSet.Latin1)
                 ));
+
+            services.InjectForNamespace(REPOSITORIES_NAMESPACE);
+            services.InjectForNamespace(SERVICES_NAMESPACE);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

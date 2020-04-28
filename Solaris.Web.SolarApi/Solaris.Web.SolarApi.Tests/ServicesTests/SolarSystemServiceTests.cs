@@ -11,7 +11,5 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
         {
             m_repositoryMock = new Mock<ISolarSystemRepository>();
         }
-        
-        
     }
 }

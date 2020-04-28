@@ -12,9 +12,13 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
     {
         [Key] public Guid Id { get; set; }
 
-        [Required] public Vector3 SpacePosition { get; set; }
+        [Required]
+        [Column(TypeName = "varchar(256)")]
+        public Vector3 SpacePosition { get; set; }
 
-        [Required] [Column("varchar(255)")] public string Name { get; set; }
+        [Required]
+        [Column(TypeName = "varchar(256)")]
+        public string Name { get; set; }
 
         [Required] public long DistanceToEarth { get; set; }
 

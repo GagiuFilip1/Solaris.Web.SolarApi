@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Solaris.Web.SolarApi.Infrastructure.CommonHelpers;
 
@@ -10,5 +11,6 @@ namespace Solaris.Web.SolarApi.Core.Models
         public Vector3 SpacePosition { get; set; }
         public string Name { get; set; }
         public long DistanceToEarth { get; set; }
+        public IEnumerable<Planet> Planets { get; set; }
     }
 }

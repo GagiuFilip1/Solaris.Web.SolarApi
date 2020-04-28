@@ -11,6 +11,6 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
         public Vector3 SpacePosition { get; set; }
         public string Name { get; set; }
         public long DistanceToEarth { get; set; }
-        public IEnumerable<Planet> Planets { get; set; }
+        public List<Planet> Planets { get; set; } = new List<Planet>();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Interfaces;
 
 namespace Solaris.Web.SolarApi.Core.Models.Entities
 {

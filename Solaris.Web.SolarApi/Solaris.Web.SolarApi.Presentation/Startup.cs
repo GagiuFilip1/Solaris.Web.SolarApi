@@ -1,19 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Pomelo.EntityFrameworkCore.MySql.Storage;
-using Solaris.Web.SolarApi.Core.Data;
-using Solaris.Web.SolarApi.Core.Repositories.Implementations;
-using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
+using Solaris.Web.SolarApi.Infrastructure.Data;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Presentation

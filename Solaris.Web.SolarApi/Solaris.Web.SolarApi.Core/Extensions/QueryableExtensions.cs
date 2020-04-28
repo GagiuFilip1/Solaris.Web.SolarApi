@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Models;
+using Solaris.Web.SolarApi.Core.Models;
 
-namespace Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Extensions
+namespace Solaris.Web.SolarApi.Core.Extensions
 {
     public static class QueryableExtensions
     {

@@ -1,14 +1,16 @@
 using System;
+using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
+using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Filters;
-using Solaris.Web.SolarApi.Core.Repositories.Implementations;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Models;
+using Solaris.Web.SolarApi.Infrastructure.Filters;
+using Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations;
 using Solaris.Web.SolarApi.Tests.Utils;
 using Xunit;
 
-namespace Solaris.Web.SolarApi.Tests.RepositoryTests
+namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
 {
     public class PlanetRepositoryTests : IClassFixture<DatabaseFixture>
     {
@@ -57,7 +59,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoryTests
             Assert.Equal(6, countNoOffset);
             Assert.Equal(6, systemsNoOffset.Count);
             Assert.Equal(6, countWithOffset);
-            Assert.Single(systemsWithOffset);
+            Assert.Single((IEnumerable) systemsWithOffset);
         }
 
         [Fact]
@@ -87,6 +89,64 @@ namespace Solaris.Web.SolarApi.Tests.RepositoryTests
             Assert.Equal(descResult.First().Id, ascResult.Last().Id);
             Assert.Equal(descResult.First().Name, m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DataBaseSeed.Planet6Id)).Name);
             Assert.Equal(ascResult.First().Name, m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DataBaseSeed.Planet1Id)).Name);
+        }
+
+        [Fact]
+        public async void SearchWithFiltering_Ok()
+        {
+            //Arrange
+            var firstPlanet = m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DataBaseSeed.Planet1Id));
+
+            //ACT
+            var (_, idFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new PlanetFilter()
+                {
+                    SearchTerm = firstPlanet.Id.ToString()
+                });
+
+            var (_, nameFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new PlanetFilter
+                {
+                    SearchTerm = "P"
+                });
+
+
+            //ASSERT
+            Assert.Equal(firstPlanet.Id, idFiltered.First().Id);
+            Assert.Equal(6, nameFiltered.Count);
+        }
+
+        [Fact]
+        public async Task AddAndDeleteNewSolarSystem_Ok()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            var system = new Planet
+            {
+                Id = id,
+                Name = "Test"
+            };
+
+            //Act
+            await m_repository.CreateAsync(system);
+
+            //Assert
+            var (_, planets) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Equal(id, planets.First().Id);
+            Assert.Equal("Test", planets.First().Name);
+            await m_repository.DeleteAsync(system);
+            var (_, emptyResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Empty(emptyResponse);
         }
     }
 }

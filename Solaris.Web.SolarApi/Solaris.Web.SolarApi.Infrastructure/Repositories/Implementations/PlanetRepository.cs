@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
-using Solaris.Web.SolarApi.Core.Data;
+using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Extensions;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Models;
+using Solaris.Web.SolarApi.Infrastructure.Data;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
-namespace Solaris.Web.SolarApi.Core.Repositories.Implementations
+namespace Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations
 {
     [RegistrationKind(Type = RegistrationType.Scoped)]
     public class PlanetRepository : IPlanetRepository
@@ -40,7 +38,7 @@ namespace Solaris.Web.SolarApi.Core.Repositories.Implementations
             m_dataContext.Planets.Remove(entity);
             await m_dataContext.SaveChangesAsync();
         }
-
+        
         public async Task<Tuple<int, List<Planet>>> SearchAsync(Pagination pagination, Ordering ordering, IFilter<Planet> filtering)
         {
             return await filtering.Filter(m_dataContext.Planets.AsQueryable())

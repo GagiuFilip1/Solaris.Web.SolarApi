@@ -1,4 +1,4 @@
-namespace Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Extensions
+namespace Solaris.Web.SolarApi.Core.Extensions
 {
     public static class StringExtensions
     {

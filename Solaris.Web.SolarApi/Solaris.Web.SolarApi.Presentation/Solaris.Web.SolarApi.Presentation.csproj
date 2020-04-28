@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Solaris.Web.SolarApi.Core\Solaris.Web.SolarApi.Core.csproj" />
+      <ProjectReference Include="..\Solaris.Web.SolarApi.Infrastructure\Solaris.Web.SolarApi.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

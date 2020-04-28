@@ -1,8 +1,7 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Solaris.Web.SolarApi.Core.Data;
+using Solaris.Web.SolarApi.Infrastructure.Data;
 
 namespace Solaris.Web.SolarApi.Tests.Utils
 {

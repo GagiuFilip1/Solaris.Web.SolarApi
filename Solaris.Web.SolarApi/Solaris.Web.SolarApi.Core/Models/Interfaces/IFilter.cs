@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces
+namespace Solaris.Web.SolarApi.Core.Models.Interfaces
 {
     public interface IFilter<TEntity> where TEntity : IIdentifier
     {

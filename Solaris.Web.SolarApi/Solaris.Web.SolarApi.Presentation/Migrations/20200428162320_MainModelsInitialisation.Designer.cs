@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Solaris.Web.SolarApi.Core.Data;
+using Solaris.Web.SolarApi.Infrastructure.Data;
 
 namespace Solaris.Web.SolarApi.Presentation.Migrations
 {

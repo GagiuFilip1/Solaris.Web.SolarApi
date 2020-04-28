@@ -1,14 +1,16 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Solaris.Web.SolarApi.Core.Extensions;
+using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Filters;
-using Solaris.Web.SolarApi.Core.Repositories.Implementations;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Models;
+using Solaris.Web.SolarApi.Infrastructure.Filters;
+using Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations;
 using Solaris.Web.SolarApi.Tests.Utils;
 using Xunit;
 
-namespace Solaris.Web.SolarApi.Tests.RepositoryTests
+namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
 {
     public class SolarSystemRepositoryTests : IClassFixture<DatabaseFixture>
     {
@@ -20,7 +22,6 @@ namespace Solaris.Web.SolarApi.Tests.RepositoryTests
             m_databaseFixture = databaseFixture;
             m_repository = new SolarSystemRepository(m_databaseFixture.DataContext);
         }
-
 
         [Fact]
         public async void SimpleSearch_Ok()
@@ -50,7 +51,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoryTests
                 Take = 3,
                 Offset = 2
             }, new Ordering(), new SolarSystemFilter());
-            
+
             //ASSERT
             Assert.Equal(3, countNoOffset);
             Assert.Equal(3, systemsNoOffset.Count);
@@ -80,12 +81,79 @@ namespace Solaris.Web.SolarApi.Tests.RepositoryTests
                     OrderDirection = OrderDirection.Asc
                 },
                 new SolarSystemFilter());
-            
+
             //ASSERT
             Assert.Equal(descResult.Count, ascResult.Count);
             Assert.Equal(descResult.First().Id, ascResult.Last().Id);
             Assert.Equal(descResult.First().Name, m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem3Id)).Name);
             Assert.Equal(ascResult.First().Name, m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem1Id)).Name);
+        }
+
+        [Fact]
+        public async void SearchWithFiltering_Ok()
+        {
+            //Arrange
+            var firstSolarSystem = m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem1Id));
+            var thirdSolarSystem = m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem3Id));
+
+            //ACT
+            var (_, idFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new SolarSystemFilter
+                {
+                    SearchTerm = firstSolarSystem.Id.ToString()
+                });
+
+            var (_, nameFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new SolarSystemFilter
+                {
+                    SearchTerm = "S"
+                });
+
+            var (_, positionFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new SolarSystemFilter
+                {
+                    SearchTerm = thirdSolarSystem.SpacePosition.ToDbValue()
+                });
+
+            //ASSERT
+            Assert.Equal(firstSolarSystem.Id, idFiltered.First().Id);
+            Assert.Equal(3, nameFiltered.Count);
+            Assert.Equal(thirdSolarSystem.SpacePosition, positionFiltered.First().SpacePosition);
+        }
+
+        [Fact]
+        public async Task AddAndDeleteNewSolarSystem_Ok()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            var system = new SolarSystem
+            {
+                Id = id,
+                Name = "Test"
+            };
+
+            //Act
+            await m_repository.CreateAsync(system);
+
+            //Assert
+            var (_, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Equal(id, systems.First().Id);
+            Assert.Equal("Test", systems.First().Name);
+            await m_repository.DeleteAsync(system);
+            var (_, emptyResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Empty(emptyResponse);
         }
     }
 }

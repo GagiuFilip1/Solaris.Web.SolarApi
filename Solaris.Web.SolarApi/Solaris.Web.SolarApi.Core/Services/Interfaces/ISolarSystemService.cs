@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
@@ -9,7 +11,7 @@ namespace Solaris.Web.SolarApi.Core.Services.Interfaces
     {
         Task CreateSolarSystemAsync(SolarSystem solarSystem);
         Task UpdateSolarSystemAsync(SolarSystem solarSystem);
-        Task DeleteSolarSystemAsync(SolarSystem solarSystem);
-        Task SearchSolarSystemAsync(Pagination pagination, Ordering ordering, IFilter<SolarSystem> filter);
+        Task DeleteSolarSystemAsync(Guid id);
+        Task<Tuple<int, List<SolarSystem>>> SearchSolarSystemAsync(Pagination pagination, Ordering ordering, IFilter<SolarSystem> filter);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using Solaris.Web.SolarApi.Core.Models;
+using Solaris.Web.SolarApi.Core.Models.Entities;
 
 namespace Solaris.Web.SolarApi.Core.Data
 {

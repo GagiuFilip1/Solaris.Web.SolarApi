@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Data;
 using Solaris.Web.SolarApi.Core.Models;
+using Solaris.Web.SolarApi.Core.Models.Entities;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Extensions;
 using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces;

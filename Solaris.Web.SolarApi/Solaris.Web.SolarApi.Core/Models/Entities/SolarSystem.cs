@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers;
 using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces;
 
-namespace Solaris.Web.SolarApi.Core.Models
+namespace Solaris.Web.SolarApi.Core.Models.Entities
 {
     public class SolarSystem : IIdentifier
     {

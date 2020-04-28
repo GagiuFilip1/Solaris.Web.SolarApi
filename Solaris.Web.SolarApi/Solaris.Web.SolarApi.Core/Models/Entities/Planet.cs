@@ -1,9 +1,8 @@
 ﻿using System;
 using Solaris.Web.SolarApi.Core.Enums;
-using Solaris.Web.SolarApi.Infrastructure.CommonHelpers;
 using Solaris.Web.SolarApi.Infrastructure.CommonHelpers.Interfaces;
 
-namespace Solaris.Web.SolarApi.Core.Models
+namespace Solaris.Web.SolarApi.Core.Models.Entities
 {
     public class Planet : IIdentifier
     {

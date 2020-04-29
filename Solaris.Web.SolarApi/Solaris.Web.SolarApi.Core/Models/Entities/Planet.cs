@@ -29,7 +29,7 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
 
         public double PlanetSurfaceMagneticField { get; set; }
 
-        public double SolarWindVelocity { get; set; }
+        public double AverageSolarWindVelocity { get; set; }
 
         public float SpinFrequency { get; set; }
 
@@ -44,16 +44,20 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
         public List<string> Validate()
         {
             var errors = new List<string>();
-            if (SpinFrequency <= 0)
-                errors.Add("A planet can't have a spin Frequency <= 0");
-            if (GravityForce <= 0)
-                errors.Add("A planet can't have a Gravity Force <= 0 G's");
-            if (PlanetRadius <= 0)
+            if (!PlanetStatus.Equals(PlanetStatus.Habitable) && !PlanetStatus.Equals(PlanetStatus.Uninhabitable))
+                return errors;
+            
+            if (SpinFrequency < 0)
+                errors.Add("A planet can't have a spin Frequency < 0");
+            if (GravityForce < 0)
+                errors.Add("A planet can't have a Gravity Force < 0 m/s^2");
+            if (PlanetRadius < 0)
                 errors.Add("A planet can't have a Radius < 0");
-            if (PlanetSurfaceMagneticField <= 0)
-                errors.Add("A planet can't have a Magnetic Field <= 0 Teslas");
-            if (SolarWindVelocity < 0)
+            if (PlanetSurfaceMagneticField < 0)
+                errors.Add("A planet can't have a Magnetic Field <= 0 A/m");
+            if (AverageSolarWindVelocity < 0)
                 errors.Add("A planet can't have a Solar Wind Velocity < 0 KM/S");
+
             return errors;
         }
     }

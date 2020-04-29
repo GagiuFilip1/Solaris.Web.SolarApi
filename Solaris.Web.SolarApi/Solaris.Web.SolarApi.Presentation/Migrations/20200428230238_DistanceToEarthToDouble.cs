@@ -7,8 +7,8 @@ namespace Solaris.Web.SolarApi.Presentation.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<double>(
-                name: "DistanceToEarth",
-                table: "SolarSystems",
+                "DistanceToEarth",
+                "SolarSystems",
                 nullable: false,
                 oldClrType: typeof(long),
                 oldType: "bigint");
@@ -17,9 +17,9 @@ namespace Solaris.Web.SolarApi.Presentation.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<long>(
-                name: "DistanceToEarth",
-                table: "SolarSystems",
-                type: "bigint",
+                "DistanceToEarth",
+                "SolarSystems",
+                "bigint",
                 nullable: false,
                 oldClrType: typeof(double));
         }

@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="GraphQl" />
       <Folder Include="Repositories" />
     </ItemGroup>
 

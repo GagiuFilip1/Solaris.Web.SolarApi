@@ -6,5 +6,6 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
     public class RegistrationKindAttribute : Attribute
     {
         public RegistrationType Type { get; set; }
+        public bool AsSelf { get; set; }
     }
 }

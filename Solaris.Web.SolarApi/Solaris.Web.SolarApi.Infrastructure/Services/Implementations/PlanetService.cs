@@ -11,9 +11,11 @@ using Solaris.Web.SolarApi.Core.Models.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
+using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
 {
+    [RegistrationKind(Type = RegistrationType.Scoped)]
     public class PlanetService : IPlanetService
     {
         private readonly IPlanetRepository m_repository;

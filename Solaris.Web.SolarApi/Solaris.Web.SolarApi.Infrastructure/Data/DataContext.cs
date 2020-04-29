@@ -18,6 +18,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Data
         {
             SetModelsRelations(modelBuilder);
             SetConvertors(modelBuilder);
+            SetIndexes(modelBuilder);
         }
 
         private static void SetModelsRelations(ModelBuilder modelBuilder)
@@ -33,6 +34,17 @@ namespace Solaris.Web.SolarApi.Infrastructure.Data
                 t => t == null ? null : t.ToString(),
                 t => t == null ? new SpaceCoordinates() : SpaceCoordinates.FromString(t)
             ));
+        }
+
+        private static void SetIndexes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SolarSystem>()
+                .HasIndex(t => t.Name)
+                .IsUnique();
+            
+            modelBuilder.Entity<Planet>()
+                .HasIndex(t => t.Name)
+                .IsUnique();
         }
     }
 }

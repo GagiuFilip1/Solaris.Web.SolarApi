@@ -1,3 +1,5 @@
+using GraphQL.Server;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,8 +15,8 @@ namespace Solaris.Web.SolarApi.Presentation
         private IConfiguration Configuration { get; }
         private const string CONNECTION_STRING_PATH = "ConnectionStrings:SolarisApi";
         private const string MIGRATION_ASSEMBLY = "Solaris.Web.SolarApi.Presentation";
-        private const string REPOSITORIES_NAMESPACE = "Solaris.Web.SolarApi.Core.Repositories.Implementations";
-        private const string SERVICES_NAMESPACE = "Solaris.Web.SolarApi.Core.Services.Implementations";
+        private const string REPOSITORIES_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations";
+        private const string SERVICES_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Services.Implementations";
 
         public Startup(IConfiguration configuration)
         {
@@ -26,6 +28,7 @@ namespace Solaris.Web.SolarApi.Presentation
             services.InjectMySqlDbContext<DataContext>(Configuration[CONNECTION_STRING_PATH], MIGRATION_ASSEMBLY);
             services.InjectForNamespace(REPOSITORIES_NAMESPACE);
             services.InjectForNamespace(SERVICES_NAMESPACE);
+            services.InjectGraphQl();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -34,6 +37,8 @@ namespace Solaris.Web.SolarApi.Presentation
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseGraphQL<ISchema>();
         }
     }
 }

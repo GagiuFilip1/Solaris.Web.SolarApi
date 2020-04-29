@@ -22,6 +22,10 @@ namespace Solaris.Web.SolarApi.Presentation
                     logging.ClearProviders();
                     NLogBuilder.ConfigureNLog(LOG_CONFIG);
                 })
+                .ConfigureKestrel((context, options) =>
+                {
+                    options.AllowSynchronousIO = true;
+                })
                 .UseWebRoot("")
                 .UseNLog()
                 .UseStartup<Startup>();

@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Numerics;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 using Solaris.Web.SolarApi.Core.Models.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
@@ -34,8 +33,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             });
 
             //Assert
@@ -50,24 +49,24 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "a-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             });
 
             var invalidName = m_solarSystemService.CreateSolarSystemAsync(new SolarSystem
             {
                 Id = Guid.NewGuid(),
                 Name = "a-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             });
 
             var invalidDistance = m_solarSystemService.CreateSolarSystemAsync(new SolarSystem
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.35,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.35F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             });
 
             //Assert
@@ -88,8 +87,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             });
 
             //Assert
@@ -104,8 +103,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             };
             m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
@@ -129,8 +128,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             });
 
             //Assert
@@ -145,8 +144,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             };
             m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
@@ -180,8 +179,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F)
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
             };
             m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));

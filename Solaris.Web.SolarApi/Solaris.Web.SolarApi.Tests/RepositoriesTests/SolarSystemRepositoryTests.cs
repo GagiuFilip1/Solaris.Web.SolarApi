@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Solaris.Web.SolarApi.Core.Extensions;
-using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
 using Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations;
@@ -118,7 +117,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
                 new Ordering(),
                 new SolarSystemFilter
                 {
-                    SearchTerm = thirdSolarSystem.SpacePosition.ToDbValue()
+                    SearchTerm = thirdSolarSystem.SpacePosition.ToString()
                 });
 
             //ASSERT
@@ -169,10 +168,6 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
 
             //Act
             await m_repository.CreateAsync(system);
-            var (_, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
-            {
-                SearchTerm = id.ToString()
-            });
             system.Name = "Modified";
             await m_repository.UpdateAsync(system);
             var (_, updatedResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
@@ -181,8 +176,8 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             });
             
             //Assert
-            Assert.Equal(id, systems.First().Id);
-            Assert.Equal("Modified", systems.First().Name);
+            Assert.Equal(id, updatedResponse.First().Id);
+            Assert.Equal("Modified", updatedResponse.First().Name);
             await m_repository.DeleteAsync(system);
         }
     }

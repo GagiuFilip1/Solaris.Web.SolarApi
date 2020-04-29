@@ -20,7 +20,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Filters
                 ? filterQuery.Where(p => p.Id.Equals(guid))
                 : filterQuery.Where(p =>
                     EF.Functions.Like(p.Name, SearchTerm.ToMySqlLikeSyntax()) ||
-                    EF.Functions.Like(p.SpacePosition.ToDbValue(), SearchTerm.ToMySqlLikeSyntax()));
+                    EF.Functions.Like(p.SpacePosition.ToString(), SearchTerm.ToMySqlLikeSyntax()));
 
             return filterQuery;
         }

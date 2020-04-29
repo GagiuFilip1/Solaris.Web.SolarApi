@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Numerics;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Solaris.Web.SolarApi.Core.Models;
+using Solaris.Web.SolarApi.Core.Enums;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 using Solaris.Web.SolarApi.Core.Models.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
@@ -36,8 +36,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F),
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F),
             };
             m_solarSystemRepositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<SolarSystemFilter>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
@@ -50,7 +50,7 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
                 SpinFrequency = 8,
                 GravityForce = 10,
                 PlanetRadius = 18000000,
-                PlanetSurfaceMagneticField = 8.9
+                PlanetSurfaceMagneticField = 8.9F
             });
 
             //Assert
@@ -65,8 +65,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F),
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F),
             };
             m_solarSystemRepositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<SolarSystemFilter>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
@@ -77,11 +77,11 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
                 Name = "A-1",
                 SolarSystemId = solarSystem.Id,
                 SpinFrequency = -1,
-                GravityForce = 0,
-                PlanetRadius = 0,
-                PlanetSurfaceMagneticField = 0
+                GravityForce = -1,
+                PlanetRadius = -1,
+                PlanetSurfaceMagneticField = -1,
+                PlanetStatus = PlanetStatus.Uninhabitable
             });
-
 
             //Assert
             await Assert.ThrowsAsync<ValidationException>(async () => await invalidData);
@@ -97,8 +97,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F),
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F),
             };
             m_solarSystemRepositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<SolarSystemFilter>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
@@ -112,7 +112,7 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
                 SpinFrequency = 8,
                 GravityForce = 10,
                 PlanetRadius = 18000000,
-                PlanetSurfaceMagneticField = 8.9
+                PlanetSurfaceMagneticField = 8.9F
             });
 
             //Assert
@@ -127,8 +127,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F),
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F),
             };
             var planet = new Planet
             {
@@ -138,7 +138,7 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
                 SpinFrequency = 8,
                 GravityForce = 10,
                 PlanetRadius = 18000000,
-                PlanetSurfaceMagneticField = 8.9
+                PlanetSurfaceMagneticField = 8.9F
             };
             m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<Planet>>()))
                 .ReturnsAsync(new Tuple<int, List<Planet>>(1, new List<Planet> {planet}));
@@ -162,8 +162,8 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
-                DistanceToEarth = 4.38,
-                SpacePosition = new Vector3(12323.54F, 53432.24F, 23131.01F),
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F),
             };
             m_solarSystemRepositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<SolarSystemFilter>()))
                 .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));

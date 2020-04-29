@@ -1,7 +1,6 @@
 using GraphQL.Types;
-using Solaris.Web.SolarApi.Core.Models.Entities;
 
-namespace Solaris.Web.SolarApi.Core.GraphQl.OutputObjects
+namespace Solaris.Web.SolarApi.Core.GraphQl.OutputObjects.Planet
 {
     public class PlanetQueryViewModel : ObjectGraphType<Models.Entities.Planet>
     {

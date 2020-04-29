@@ -25,7 +25,7 @@ namespace Solaris.Web.SolarApi.Core.GraphQl.Helpers
             ObjectId = objectId;
         }
 
-        public bool Success { get; }
+        public bool Success { get;  }
 
         public Guid ObjectId { get; }
     }

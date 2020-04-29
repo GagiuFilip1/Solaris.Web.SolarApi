@@ -3,7 +3,7 @@ using Solaris.Web.SolarApi.Core.Models.Entities;
 
 namespace Solaris.Web.SolarApi.Core.GraphQl.InputObjects
 {
-    public class PlanetCreateViewModel : InputObjectGraphType<Planet>
+    public class PlanetCreateViewModel : InputObjectGraphType<Models.Entities.Planet>
     {
         public PlanetCreateViewModel()
         {

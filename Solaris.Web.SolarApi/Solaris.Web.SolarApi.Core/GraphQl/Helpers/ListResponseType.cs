@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GraphQL.Types;
-using Solaris.Web.SolarApi.Core.GraphQl.OutputObjects;
+using Solaris.Web.SolarApi.Core.GraphQl.OutputObjects.Planet;
+using Solaris.Web.SolarApi.Core.GraphQl.OutputObjects.SolarSystem;
 
 namespace Solaris.Web.SolarApi.Core.GraphQl.Helpers
 {
@@ -20,8 +21,12 @@ namespace Solaris.Web.SolarApi.Core.GraphQl.Helpers
         public long TotalCount { get; set; }
         public IList<T> Items { get; set; }
     }
-    
+
     public class ListPlanetsQueryModelType : ListResponseType<PlanetQueryViewModel>
+    {
+    }
+
+    public class ListSolarSystemsQueryModelType : ListResponseType<SolarSystemQueryViewModel>
     {
     }
 }

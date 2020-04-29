@@ -25,11 +25,11 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
 
         public float GravityForce { get; set; }
 
-        public double PlanetRadius { get; set; }
+        public float PlanetRadius { get; set; }
 
-        public double PlanetSurfaceMagneticField { get; set; }
+        public float PlanetSurfaceMagneticField { get; set; }
 
-        public double AverageSolarWindVelocity { get; set; }
+        public float AverageSolarWindVelocity { get; set; }
 
         public float SpinFrequency { get; set; }
 

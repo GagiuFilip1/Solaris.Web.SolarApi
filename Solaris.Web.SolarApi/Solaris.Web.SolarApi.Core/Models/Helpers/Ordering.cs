@@ -1,4 +1,4 @@
-namespace Solaris.Web.SolarApi.Core.Models
+namespace Solaris.Web.SolarApi.Core.Models.Helpers
 {
     public class Ordering
     {

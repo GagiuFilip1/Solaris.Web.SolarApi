@@ -1,13 +1,12 @@
 using GraphQL.Types;
-using Solaris.Web.SolarApi.Core.Models.Entities;
 
-namespace Solaris.Web.SolarApi.Core.GraphQl.InputObjects
+namespace Solaris.Web.SolarApi.Core.GraphQl.InputObjects.Planet
 {
     public class PlanetUpdateViewModel : InputObjectGraphType<Models.Entities.Planet>
     {
         public PlanetUpdateViewModel()
         {
-            Field(x => x.Id, type: typeof(NonNullGraphType<GuidGraphType>)).Description("The id of the planet to be updated");
+            Field(x => x.Id, type: typeof(NonNullGraphType<IdGraphType>)).Description("The id of the planet to be updated");
             Field(x => x.Name, true);
             Field(x => x.Description, true);
             Field(x => x.PlanetStatus, true).Description("The current exploration status over this planet (Unexplored = 0,ExplorationInProcess = 1,Habitable = 2,Uninhabitable = 3)");

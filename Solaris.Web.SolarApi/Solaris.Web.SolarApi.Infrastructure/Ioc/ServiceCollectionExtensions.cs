@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -10,8 +11,9 @@ using GraphQL.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Pomelo.EntityFrameworkCore.MySql.Storage;
+using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.GraphQl.Root;
-using Solaris.Web.SolarApi.Core.Models;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Ioc
 {
@@ -44,20 +46,30 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
             InjectDependenciesForAssembly(Assemblies.FirstOrDefault(t => nameSpace.Contains(t.GetName().Name)), nameSpace);
         }
 
+        private static void InjectDependenciesForAssembly(Assembly assembly, string nameSpace)
+        {
+            if (assembly == null)
+                return;
+
+            var typesToRegister = assembly.GetTypes()
+                .Where(x => x.Namespace != null && x.Namespace.Contains(nameSpace, StringComparison.InvariantCultureIgnoreCase) && x.GetInterfaces().Any())
+                .ToList();
+            typesToRegister.ForEach(RegisterType);
+        }
+
         public static void InjectGraphQl(this IServiceCollection collection)
         {
+            InjectForNamespace(collection, "Solaris.Web.SolarApi.Presentation.GraphQl.Schemas");
+            InjectForNamespace(collection, "Solaris.Web.SolarApi.Presentation.GraphQl.Queries");
+            InjectForNamespace(collection, "Solaris.Web.SolarApi.Presentation.GraphQl.Mutations");
+
             collection.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             collection.AddScoped<RootSchema>();
             collection.AddScoped<RootMutation>();
             collection.AddScoped<RootQuery>();
             collection.AddScoped<ISchema, RootSchema>();
-            collection.AddGraphQL(opt => { opt.ExposeExceptions = true; })
-                .AddGraphTypes(ServiceLifetime.Scoped)
-                .AddDataLoader();
-
-            InjectForNamespace(collection, "Solaris.Web.SolarApi.Presentation.GraphQl.Schemas");
-            InjectForNamespace(collection, "Solaris.Web.SolarApi.Presentation.GraphQl.Queries");
-            InjectForNamespace(collection, "Solaris.Web.SolarApi.Presentation.GraphQl.Mutations");
+            collection.AddScoped<GuidGraphType>();
+            collection.AddScoped<EnumerationGraphType<OrderDirection>>();
 
             var coreAssembly = Assembly.Load("Solaris.Web.SolarApi.Core");
 
@@ -67,16 +79,10 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
                 collection.AddScoped(p.UnderlyingSystemType);
             });
 
-            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.InputObjects").ForEach(p =>
-            {
-                collection.AddScoped(p.UnderlyingSystemType);
-            });
+            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.InputObjects").ForEach(p => { collection.AddScoped(p.UnderlyingSystemType); });
 
-            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.OutputObjects").ForEach(p =>
-            {
-                collection.AddScoped(p.UnderlyingSystemType);
-            });
-            
+            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.OutputObjects").ForEach(p => { collection.AddScoped(p.UnderlyingSystemType); });
+
             var enumGraphType = typeof(EnumerationGraphType<>);
             coreAssembly.GetEnumsForPath("Solaris.Web.SolarApi.Core.Enums").ForEach(p =>
             {
@@ -84,23 +90,27 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
                 GraphTypeTypeRegistry.Register(p, enumGraphType.MakeGenericType(p));
                 collection.AddScoped(enumGraphType.MakeGenericType(p));
             });
-            
+
             GraphTypeTypeRegistry.Register(typeof(OrderDirection), enumGraphType.MakeGenericType(typeof(OrderDirection)));
-            collection.AddScoped<GuidGraphType>();
-            collection.AddScoped<EnumerationGraphType<OrderDirection>>();
             GraphTypeTypeRegistry.Register(typeof(Guid), typeof(GuidGraphType));
+
+            collection.AddGraphQL(opt => { opt.ExposeExceptions = true; })
+                .AddGraphTypes(ServiceLifetime.Scoped)
+                .AddDataLoader();
+     
+            
+            ValueConverter.Register(
+                typeof(double),
+                typeof(float),
+                value => Convert.ToSingle(value, NumberFormatInfo.InvariantInfo));
+            
+            ValueConverter.Register(
+                typeof(float),
+                typeof(double),
+                value => Convert.ToDouble(value, NumberFormatInfo.InvariantInfo));
+
         }
 
-        private static void InjectDependenciesForAssembly(Assembly assembly, string nameSpace)
-        {
-            if (assembly == null)
-                return;
-
-            var typesToRegister = assembly.GetTypes()
-                .Where(x => x.Namespace != null && x.Namespace.Equals(nameSpace, StringComparison.InvariantCultureIgnoreCase) && x.GetInterfaces().Any())
-                .ToList();
-            typesToRegister.ForEach(RegisterType);
-        }
 
         private static void RegisterType(Type typeToRegister)
         {

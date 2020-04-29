@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Numerics;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 using Solaris.Web.SolarApi.Core.Models.Interfaces;
 
 namespace Solaris.Web.SolarApi.Core.Models.Entities
@@ -14,13 +14,13 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
 
         [Required]
         [Column(TypeName = "varchar(256)")]
-        public Vector3 SpacePosition { get; set; }
+        public SpaceCoordinates SpacePosition { get; set; }
 
         [Required]
         [Column(TypeName = "varchar(256)")]
         public string Name { get; set; }
 
-        [Required] public double DistanceToEarth { get; set; }
+        [Required] public float DistanceToEarth { get; set; }
 
         public List<Planet> Planets { get; set; } = new List<Planet>();
 
@@ -29,8 +29,8 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
             var errors = new List<string>();
             if (Name.Any(char.IsLower))
                 errors.Add("Name should contain only Uppercase Letter ,numbers and symbols");
-            if (DistanceToEarth <= 4.37)
-                errors.Add("The distance to earth must be at least 4.37 light years away( Alpha Centauri )");
+            if (DistanceToEarth <= 4.369F)
+                errors.Add("The distance to earth must be at least 4.369 light years away( Alpha Centauri )");
             return errors;
         }
     }

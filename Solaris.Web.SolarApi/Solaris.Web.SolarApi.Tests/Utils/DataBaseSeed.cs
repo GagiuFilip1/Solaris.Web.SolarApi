@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 
 namespace Solaris.Web.SolarApi.Tests.Utils
 {
@@ -26,19 +26,19 @@ namespace Solaris.Web.SolarApi.Tests.Utils
                 {
                     Id = SolarSystem1Id,
                     Name = "S1",
-                    SpacePosition = new Vector3(1, 1, 1),
+                    SpacePosition = new SpaceCoordinates(1, 1, 1),
                 },
                 new SolarSystem
                 {
                     Id = SolarSystem2Id,
                     Name = "S2",
-                    SpacePosition = new Vector3(2, 2, 2)
+                    SpacePosition = new SpaceCoordinates(2, 2, 2)
                 },
                 new SolarSystem
                 {
                     Id = SolarSystem3Id,
                     Name = "S3",
-                    SpacePosition = new Vector3(3, 3, 3)
+                    SpacePosition = new SpaceCoordinates(3, 3, 3)
                 }
             };
         }

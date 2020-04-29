@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Solaris.Web.SolarApi.Core.Models;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 using Solaris.Web.SolarApi.Core.Models.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
@@ -42,7 +42,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 m_logger.LogWarning(e, "A validation failed");
                 throw;
             }
-            catch (Exception e)
+            catch (Exception e) when (e.GetType() != typeof(ValidationException))
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to create a solar system with the properties : {JsonConvert.SerializeObject(solarSystem, Formatting.Indented)}");
                 throw;
@@ -103,7 +103,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 throw;
             }
         }
-        
+
         private async Task<SolarSystem> EnsureSolarSystemExistAsync(Guid id)
         {
             var (_, searchResult) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter

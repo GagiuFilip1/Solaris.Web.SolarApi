@@ -11,33 +11,33 @@ using Solaris.Web.SolarApi.Infrastructure.Ioc;
 namespace Solaris.Web.SolarApi.Presentation.GraphQl.Queries
 {
     [RegistrationKind(Type = RegistrationType.Scoped, AsSelf = true)]
-    public class PlanetQueries : ObjectGraphType
+    public class SolarSystemQueries : ObjectGraphType
     {
         private const string SEARCH_REQUEST_ENDPOINT = "search";
         private const string PAGINATION_ARGUMENT_NAME = "pagination";
         private const string ORDERING_ARGUMENT_NAME = "ordering";
         private const string FILTERING_ARGUMENT_NAME = "filtering";
 
-        public PlanetQueries(IPlanetService planetService)
+        public SolarSystemQueries(ISolarSystemService solarSystemService)
         {
-            FieldAsync<ListPlanetsQueryModelType>(
+            FieldAsync<ListSolarSystemsQueryModelType>(
                 SEARCH_REQUEST_ENDPOINT,
-                "Returns a paginated list of planets",
+                "Returns a paginated list of SolarSystems",
                 new QueryArguments(
                     new QueryArgument<NonNullGraphType<PagedRequestType>> {Name = PAGINATION_ARGUMENT_NAME, Description = PagedRequestType.Description},
                     new QueryArgument<NonNullGraphType<OrderedRequestType>> {Name = ORDERING_ARGUMENT_NAME, Description = OrderedRequestType.Description},
-                    new QueryArgument<NonNullGraphType<FilteredRequestType<Planet>>> {Name = FILTERING_ARGUMENT_NAME, Description = FilteredRequestType<Planet>.Description}
+                    new QueryArgument<NonNullGraphType<FilteredRequestType<SolarSystem>>> {Name = FILTERING_ARGUMENT_NAME, Description = FilteredRequestType<SolarSystem>.Description}
                 ),
                 async context =>
                 {
                     var pagination = context.GetArgument<Pagination>(PAGINATION_ARGUMENT_NAME);
                     var ordering = context.GetArgument<Ordering>(ORDERING_ARGUMENT_NAME);
-                    var filtering = context.GetArgument<PlanetFilter>(FILTERING_ARGUMENT_NAME);
+                    var filtering = context.GetArgument<SolarSystemFilter>(FILTERING_ARGUMENT_NAME);
 
-                    var (totalCount, items) = await planetService.SearchPlanetAsync(pagination, ordering, filtering);
+                    var (totalCount, items) = await solarSystemService.SearchSolarSystemAsync(pagination, ordering, filtering);
                     try
                     {
-                        return new ListResponse<Planet>
+                        return new ListResponse<SolarSystem>
                         {
                             TotalCount = totalCount,
                             Items = items

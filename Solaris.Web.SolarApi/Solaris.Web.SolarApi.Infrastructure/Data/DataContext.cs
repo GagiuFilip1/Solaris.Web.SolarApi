@@ -1,8 +1,7 @@
-﻿using System.Numerics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Helpers;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Data
 {
@@ -30,9 +29,9 @@ namespace Solaris.Web.SolarApi.Infrastructure.Data
 
         private static void SetConvertors(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SolarSystem>().Property(t => t.SpacePosition).HasConversion(new ValueConverter<Vector3, string>(
-                t => t == null ? null : t.ToDbValue(),
-                t => t == null ? new Vector3() : new Vector3().FromDbValue(t)
+            modelBuilder.Entity<SolarSystem>().Property(t => t.SpacePosition).HasConversion(new ValueConverter<SpaceCoordinates, string>(
+                t => t == null ? null : t.ToString(),
+                t => t == null ? new SpaceCoordinates() : SpaceCoordinates.FromString(t)
             ));
         }
     }

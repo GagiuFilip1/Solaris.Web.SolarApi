@@ -20,7 +20,7 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
         [Column(TypeName = "varchar(256)")]
         public string Name { get; set; }
 
-        [Required] public long DistanceToEarth { get; set; }
+        [Required] public double DistanceToEarth { get; set; }
 
         public List<Planet> Planets { get; set; } = new List<Planet>();
 
@@ -29,7 +29,7 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
             var errors = new List<string>();
             if (Name.Any(char.IsLower))
                 errors.Add("Name should contain only Uppercase Letter ,numbers and symbols");
-            if (DistanceToEarth < 4.37)
+            if (DistanceToEarth <= 4.37)
                 errors.Add("The distance to earth must be at least 4.37 light years away( Alpha Centauri )");
             return errors;
         }

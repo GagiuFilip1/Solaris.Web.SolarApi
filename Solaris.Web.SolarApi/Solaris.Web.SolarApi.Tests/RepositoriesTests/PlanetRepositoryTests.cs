@@ -148,5 +148,36 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             });
             Assert.Empty(emptyResponse);
         }
+        
+        [Fact]
+        public async Task UpdateNewPlanet_Ok()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            var planet = new Planet
+            {
+                Id = id,
+                Name = "Test",
+                SolarSystemId = DataBaseSeed.SolarSystem1Id
+            };
+
+            //Act
+            await m_repository.CreateAsync(planet);
+            var (_, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            planet.Name = "Modified";
+            await m_repository.UpdateAsync(planet);
+            var (_, updatedResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            
+            //Assert
+            Assert.Equal(id, systems.First().Id);
+            Assert.Equal("Modified", systems.First().Name);
+            await m_repository.DeleteAsync(updatedResponse.First());
+        }
     }
 }

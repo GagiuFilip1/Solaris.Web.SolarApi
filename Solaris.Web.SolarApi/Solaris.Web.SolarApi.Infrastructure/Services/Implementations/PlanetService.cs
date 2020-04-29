@@ -40,10 +40,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (ValidationException e)
             {
                 m_logger.LogWarning(e, "A validation failed");
+                throw;
             }
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to create a planet with the properties : {JsonConvert.SerializeObject(planet, Formatting.Indented)}");
+                throw;
             }
         }
 
@@ -61,13 +63,15 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (ValidationException e)
             {
                 m_logger.LogWarning(e, "A validation failed");
+                throw;
             }
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to update a planet with the properties : {JsonConvert.SerializeObject(planet, Formatting.Indented)}");
+                throw;
             }
         }
-        
+
         public async Task DeletePlanetAsync(Guid id)
         {
             try
@@ -79,10 +83,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (ValidationException e)
             {
                 m_logger.LogWarning(e, "A validation failed");
+                throw;
             }
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to delete a Planet for id : {id}");
+                throw;
             }
         }
 
@@ -95,9 +101,8 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to search for Planets");
+                throw;
             }
-
-            return default;
         }
 
         private async Task EnsurePlanetSolarSystemExistsAsync(Guid planetSolarSystemId)
@@ -110,7 +115,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             if (!searchResult.Any())
                 throw new ValidationException("No Solar System was found for the specified Id");
         }
-        
+
         private async Task<Planet> EnsurePlanetExistAsync(Guid id)
         {
             var (_, searchResult) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter

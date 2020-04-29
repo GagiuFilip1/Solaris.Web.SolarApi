@@ -38,10 +38,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (ValidationException e)
             {
                 m_logger.LogWarning(e, "A validation failed");
+                throw;
             }
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to create a solar system with the properties : {JsonConvert.SerializeObject(solarSystem, Formatting.Indented)}");
+                throw;
             }
         }
 
@@ -58,10 +60,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (ValidationException e)
             {
                 m_logger.LogWarning(e, "A validation failed");
+                throw;
             }
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to update a solar system with the properties : {JsonConvert.SerializeObject(solarSystem, Formatting.Indented)}");
+                throw;
             }
         }
 
@@ -76,10 +80,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (ValidationException e)
             {
                 m_logger.LogWarning(e, "A validation failed");
+                throw;
             }
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to delete a solar system for id : {id}");
+                throw;
             }
         }
 
@@ -92,9 +98,8 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             catch (Exception e)
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to search for Solar Systems");
+                throw;
             }
-
-            return default;
         }
         
         private async Task<SolarSystem> EnsureSolarSystemExistAsync(Guid id)

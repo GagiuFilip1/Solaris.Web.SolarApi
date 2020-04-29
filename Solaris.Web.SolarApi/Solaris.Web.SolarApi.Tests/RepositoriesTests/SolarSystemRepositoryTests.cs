@@ -155,5 +155,35 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             });
             Assert.Empty(emptyResponse);
         }
+
+        [Fact]
+        public async Task UpdateNewSolarSystem_Ok()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            var system = new SolarSystem
+            {
+                Id = id,
+                Name = "Test"
+            };
+
+            //Act
+            await m_repository.CreateAsync(system);
+            var (_, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            system.Name = "Modified";
+            await m_repository.UpdateAsync(system);
+            var (_, updatedResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            
+            //Assert
+            Assert.Equal(id, systems.First().Id);
+            Assert.Equal("Modified", systems.First().Name);
+            await m_repository.DeleteAsync(system);
+        }
     }
 }

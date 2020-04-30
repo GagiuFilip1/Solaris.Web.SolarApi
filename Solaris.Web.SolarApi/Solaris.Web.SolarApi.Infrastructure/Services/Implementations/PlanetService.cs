@@ -18,9 +18,9 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
     [RegistrationKind(Type = RegistrationType.Scoped)]
     public class PlanetService : IPlanetService
     {
+        private readonly ILogger<PlanetService> m_logger;
         private readonly IPlanetRepository m_repository;
         private readonly ISolarSystemRepository m_solarSystemService;
-        private readonly ILogger<PlanetService> m_logger;
 
         public PlanetService(ILogger<PlanetService> logger, IPlanetRepository repository, ISolarSystemRepository solarSystemService)
         {
@@ -36,7 +36,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 var validationError = planet.Validate();
                 if (validationError.Any())
                     throw new ValidationException($"A validation exception was raised while trying to create a planet : {JsonConvert.SerializeObject(validationError, Formatting.Indented)}");
-                await EnsurePlanetSolarSystemExistsAsync(planet.SolarSystemId);
+                await CheckSolarSystemExistsAsync(planet.SolarSystemId);
                 await m_repository.CreateAsync(planet);
             }
             catch (ValidationException e)
@@ -44,7 +44,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 m_logger.LogWarning(e, "A validation failed");
                 throw;
             }
-            catch (Exception e)
+            catch (Exception e) when (e.GetType() != typeof(ValidationException))
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to create a planet with the properties : {JsonConvert.SerializeObject(planet, Formatting.Indented)}");
                 throw;
@@ -59,7 +59,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 if (validationError.Any())
                     throw new ValidationException($"A validation exception was raised while trying to update a planet : {JsonConvert.SerializeObject(validationError, Formatting.Indented)}");
                 await EnsurePlanetExistAsync(planet.Id);
-                await EnsurePlanetSolarSystemExistsAsync(planet.SolarSystemId);
+                await CheckSolarSystemExistsAsync(planet.SolarSystemId);
                 await m_repository.UpdateAsync(planet);
             }
             catch (ValidationException e)
@@ -67,7 +67,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 m_logger.LogWarning(e, "A validation failed");
                 throw;
             }
-            catch (Exception e)
+            catch (Exception e) when (e.GetType() != typeof(ValidationException))
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to update a planet with the properties : {JsonConvert.SerializeObject(planet, Formatting.Indented)}");
                 throw;
@@ -87,7 +87,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 m_logger.LogWarning(e, "A validation failed");
                 throw;
             }
-            catch (Exception e)
+            catch (Exception e) when (e.GetType() != typeof(ValidationException))
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to delete a Planet for id : {id}");
                 throw;
@@ -102,16 +102,16 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             }
             catch (Exception e)
             {
-                m_logger.LogCritical(e, $"Unexpected Exception while trying to search for Planets");
+                m_logger.LogCritical(e, "Unexpected Exception while trying to search for Planets");
                 throw;
             }
         }
 
-        private async Task EnsurePlanetSolarSystemExistsAsync(Guid planetSolarSystemId)
+        private async Task CheckSolarSystemExistsAsync(Guid solarSystemId)
         {
             var (_, searchResult) = await m_solarSystemService.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
             {
-                SearchTerm = planetSolarSystemId.ToString()
+                SearchTerm = solarSystemId.ToString()
             });
 
             if (!searchResult.Any())

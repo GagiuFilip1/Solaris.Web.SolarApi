@@ -18,8 +18,8 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
     [RegistrationKind(Type = RegistrationType.Scoped)]
     public class SolarSystemService : ISolarSystemService
     {
-        private readonly ISolarSystemRepository m_repository;
         private readonly ILogger<SolarSystemService> m_logger;
+        private readonly ISolarSystemRepository m_repository;
 
         public SolarSystemService(ISolarSystemRepository repository, ILogger<SolarSystemService> logger)
         {
@@ -59,7 +59,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 await EnsureSolarSystemExistAsync(solarSystem.Id);
                 await m_repository.UpdateAsync(solarSystem);
             }
-            catch (ValidationException e)
+            catch (ValidationException e) when (e.GetType() != typeof(ValidationException))
             {
                 m_logger.LogWarning(e, "A validation failed");
                 throw;
@@ -84,7 +84,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 m_logger.LogWarning(e, "A validation failed");
                 throw;
             }
-            catch (Exception e)
+            catch (Exception e) when (e.GetType() != typeof(ValidationException))
             {
                 m_logger.LogCritical(e, $"Unexpected Exception while trying to delete a solar system for id : {id}");
                 throw;
@@ -99,7 +99,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             }
             catch (Exception e)
             {
-                m_logger.LogCritical(e, $"Unexpected Exception while trying to search for Solar Systems");
+                m_logger.LogCritical(e, "Unexpected Exception while trying to search for Solar Systems");
                 throw;
             }
         }

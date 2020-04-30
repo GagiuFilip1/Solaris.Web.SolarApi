@@ -45,7 +45,7 @@ namespace Solaris.Web.SolarApi.Presentation.GraphQl.Queries
                     }
                     catch (Exception e)
                     {
-                        context.Errors.Add(new ExecutionError(e.Message));
+                        context.Errors.Add(new ExecutionError("Server Error"));
                         return null;
                     }
                 }

@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Numerics;
 using GraphQL;
 using GraphQL.Types;
 using Solaris.Web.SolarApi.Core.GraphQl.Helpers;
@@ -68,9 +67,9 @@ namespace Solaris.Web.SolarApi.Presentation.GraphQl.Mutations
                         context.Errors.Add(new ExecutionError(e.Message));
                         return new ActionResponse(false);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        context.Errors.Add(new ExecutionError(e.Message));
+                        context.Errors.Add(new ExecutionError("Server Error"));
                         return new ActionResponse(false);
                     }
 

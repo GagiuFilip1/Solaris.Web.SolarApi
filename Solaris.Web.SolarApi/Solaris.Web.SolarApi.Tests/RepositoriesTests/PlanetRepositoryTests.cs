@@ -14,52 +14,71 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
 {
     public class PlanetRepositoryTests : IClassFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture m_databaseFixture;
-        private readonly IPlanetRepository m_repository;
-
         public PlanetRepositoryTests(DatabaseFixture databaseFixture)
         {
             m_databaseFixture = databaseFixture;
             m_repository = new PlanetRepository(m_databaseFixture.DataContext);
         }
 
-        [Fact]
-        public async void SimpleSearch_Ok()
-        {
-            //ACT
-            var (count, planets) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter());
+        private readonly DatabaseFixture m_databaseFixture;
+        private readonly IPlanetRepository m_repository;
 
-            //ASSERT
-            Assert.Equal(6, count);
-            Assert.Equal(DataBaseSeed.Planet1Id, planets.First(t => t.Id.Equals(DataBaseSeed.Planet1Id)).Id);
-            Assert.Equal(DataBaseSeed.Planet2Id, planets.First(t => t.Id.Equals(DataBaseSeed.Planet2Id)).Id);
-            Assert.Equal(DataBaseSeed.Planet3Id, planets.First(t => t.Id.Equals(DataBaseSeed.Planet3Id)).Id);
-            Assert.Equal(DataBaseSeed.Planet4Id, planets.First(t => t.Id.Equals(DataBaseSeed.Planet4Id)).Id);
-            Assert.Equal(DataBaseSeed.Planet5Id, planets.First(t => t.Id.Equals(DataBaseSeed.Planet5Id)).Id);
-            Assert.Equal(DataBaseSeed.Planet6Id, planets.First(t => t.Id.Equals(DataBaseSeed.Planet6Id)).Id);
+        [Fact]
+        public async Task AddAndDeleteNewPlanet_Ok()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            var system = new Planet
+            {
+                Id = id,
+                Name = "Test"
+            };
+
+            //Act
+            await m_repository.CreateAsync(system);
+
+            //Assert
+            var (_, planets) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Equal(id, planets.First().Id);
+            Assert.Equal("Test", planets.First().Name);
+            await m_repository.DeleteAsync(system);
+            var (_, emptyResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Empty(emptyResponse);
         }
 
         [Fact]
-        public async void SearchWithPagination_Ok()
+        public async void SearchWithFiltering_Ok()
         {
-            //ACT
-            var (countNoOffset, systemsNoOffset) = await m_repository.SearchAsync(new Pagination
-            {
-                Take = 6,
-                Offset = 0
-            }, new Ordering(), new PlanetFilter());
+            //Arrange
+            var firstPlanet = m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DatabaseSeed.Planet1Id));
 
-            var (countWithOffset, systemsWithOffset) = await m_repository.SearchAsync(new Pagination
-            {
-                Take = 6,
-                Offset = 5
-            }, new Ordering(), new PlanetFilter());
+            //ACT
+            var (_, idFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new PlanetFilter
+                {
+                    SearchTerm = firstPlanet.Id.ToString()
+                });
+
+            var (_, nameFiltered) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering(),
+                new PlanetFilter
+                {
+                    SearchTerm = "P"
+                });
+
 
             //ASSERT
-            Assert.Equal(6, countNoOffset);
-            Assert.Equal(6, systemsNoOffset.Count);
-            Assert.Equal(6, countWithOffset);
-            Assert.Single((IEnumerable) systemsWithOffset);
+            Assert.Equal(firstPlanet.Id, idFiltered.First().Id);
+            Assert.Equal(6, nameFiltered.Count);
         }
 
         [Fact]
@@ -87,68 +106,50 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             //ASSERT
             Assert.Equal(descResult.Count, ascResult.Count);
             Assert.Equal(descResult.First().Id, ascResult.Last().Id);
-            Assert.Equal(descResult.First().Name, m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DataBaseSeed.Planet6Id)).Name);
-            Assert.Equal(ascResult.First().Name, m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DataBaseSeed.Planet1Id)).Name);
+            Assert.Equal(descResult.First().Name, m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DatabaseSeed.Planet6Id)).Name);
+            Assert.Equal(ascResult.First().Name, m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DatabaseSeed.Planet1Id)).Name);
         }
 
         [Fact]
-        public async void SearchWithFiltering_Ok()
+        public async void SearchWithPagination_Ok()
         {
-            //Arrange
-            var firstPlanet = m_databaseFixture.DataContext.Planets.First(t => t.Id.Equals(DataBaseSeed.Planet1Id));
-
             //ACT
-            var (_, idFiltered) = await m_repository.SearchAsync(
-                new Pagination(),
-                new Ordering(),
-                new PlanetFilter()
-                {
-                    SearchTerm = firstPlanet.Id.ToString()
-                });
+            var (countNoOffset, systemsNoOffset) = await m_repository.SearchAsync(new Pagination
+            {
+                Take = 6,
+                Offset = 0
+            }, new Ordering(), new PlanetFilter());
 
-            var (_, nameFiltered) = await m_repository.SearchAsync(
-                new Pagination(),
-                new Ordering(),
-                new PlanetFilter
-                {
-                    SearchTerm = "P"
-                });
-
+            var (countWithOffset, systemsWithOffset) = await m_repository.SearchAsync(new Pagination
+            {
+                Take = 6,
+                Offset = 5
+            }, new Ordering(), new PlanetFilter());
 
             //ASSERT
-            Assert.Equal(firstPlanet.Id, idFiltered.First().Id);
-            Assert.Equal(6, nameFiltered.Count);
+            Assert.Equal(6, countNoOffset);
+            Assert.Equal(6, systemsNoOffset.Count);
+            Assert.Equal(6, countWithOffset);
+            Assert.Equal(6, systemsWithOffset.Count);
+            Assert.Single((IEnumerable) systemsWithOffset);
         }
 
         [Fact]
-        public async Task AddAndDeleteNewSolarSystem_Ok()
+        public async void SimpleSearch_Ok()
         {
-            //Arrange
-            var id = Guid.NewGuid();
-            var system = new Planet
-            {
-                Id = id,
-                Name = "Test"
-            };
+            //ACT
+            var (count, planets) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter());
 
-            //Act
-            await m_repository.CreateAsync(system);
-
-            //Assert
-            var (_, planets) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
-            {
-                SearchTerm = id.ToString()
-            });
-            Assert.Equal(id, planets.First().Id);
-            Assert.Equal("Test", planets.First().Name);
-            await m_repository.DeleteAsync(system);
-            var (_, emptyResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new PlanetFilter
-            {
-                SearchTerm = id.ToString()
-            });
-            Assert.Empty(emptyResponse);
+            //ASSERT
+            Assert.Equal(6, count);
+            Assert.Equal(DatabaseSeed.Planet1Id, planets.First(t => t.Id.Equals(DatabaseSeed.Planet1Id)).Id);
+            Assert.Equal(DatabaseSeed.Planet2Id, planets.First(t => t.Id.Equals(DatabaseSeed.Planet2Id)).Id);
+            Assert.Equal(DatabaseSeed.Planet3Id, planets.First(t => t.Id.Equals(DatabaseSeed.Planet3Id)).Id);
+            Assert.Equal(DatabaseSeed.Planet4Id, planets.First(t => t.Id.Equals(DatabaseSeed.Planet4Id)).Id);
+            Assert.Equal(DatabaseSeed.Planet5Id, planets.First(t => t.Id.Equals(DatabaseSeed.Planet5Id)).Id);
+            Assert.Equal(DatabaseSeed.Planet6Id, planets.First(t => t.Id.Equals(DatabaseSeed.Planet6Id)).Id);
         }
-        
+
         [Fact]
         public async Task UpdateNewPlanet_Ok()
         {
@@ -158,7 +159,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             {
                 Id = id,
                 Name = "Test",
-                SolarSystemId = DataBaseSeed.SolarSystem1Id
+                SolarSystemId = DatabaseSeed.SolarSystem1Id
             };
 
             //Act
@@ -173,7 +174,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             {
                 SearchTerm = id.ToString()
             });
-            
+
             //Assert
             Assert.Equal(id, systems.First().Id);
             Assert.Equal("Modified", systems.First().Name);

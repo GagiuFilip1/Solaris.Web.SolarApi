@@ -7,8 +7,6 @@ namespace Solaris.Web.SolarApi.Tests.Utils
 {
     public class DatabaseFixture : IDisposable
     {
-        public DataContext DataContext { get; }
-
         public DatabaseFixture()
         {
             var options = new DbContextOptionsBuilder<DataContext>()
@@ -19,19 +17,21 @@ namespace Solaris.Web.SolarApi.Tests.Utils
             SeedDataBase().Wait();
         }
 
-        private async Task SeedDataBase()
-        {
-            var solarSystems = DataBaseSeed.GetSolarSystems();
-            var planets = DataBaseSeed.GetPlanets();
-            await DataContext.SolarSystems.AddRangeAsync(solarSystems);
-            await DataContext.Planets.AddRangeAsync(planets);
-            await DataContext.SaveChangesAsync();
-        }
+        public DataContext DataContext { get; }
 
         public void Dispose()
         {
             DataContext.Database.EnsureDeleted();
             DataContext.Dispose();
+        }
+
+        private async Task SeedDataBase()
+        {
+            var solarSystems = DatabaseSeed.GetSolarSystems();
+            var planets = DatabaseSeed.GetPlanets();
+            await DataContext.SolarSystems.AddRangeAsync(solarSystems);
+            await DataContext.Planets.AddRangeAsync(planets);
+            await DataContext.SaveChangesAsync();
         }
     }
 }

@@ -5,7 +5,7 @@ using Solaris.Web.SolarApi.Core.Models.Helpers;
 
 namespace Solaris.Web.SolarApi.Tests.Utils
 {
-    public static class DataBaseSeed
+    public static class DatabaseSeed
     {
         public static Guid SolarSystem1Id = Guid.NewGuid();
         public static Guid SolarSystem2Id = Guid.NewGuid();
@@ -26,7 +26,7 @@ namespace Solaris.Web.SolarApi.Tests.Utils
                 {
                     Id = SolarSystem1Id,
                     Name = "S1",
-                    SpacePosition = new SpaceCoordinates(1, 1, 1),
+                    SpacePosition = new SpaceCoordinates(1, 1, 1)
                 },
                 new SolarSystem
                 {

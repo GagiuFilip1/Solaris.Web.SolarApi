@@ -13,87 +13,50 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
 {
     public class SolarSystemRepositoryTests : IClassFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture m_databaseFixture;
-        private readonly ISolarSystemRepository m_repository;
-
         public SolarSystemRepositoryTests(DatabaseFixture databaseFixture)
         {
             m_databaseFixture = databaseFixture;
             m_repository = new SolarSystemRepository(m_databaseFixture.DataContext);
         }
 
-        [Fact]
-        public async void SimpleSearch_Ok()
-        {
-            //ACT
-            var (count, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter());
-
-            //ASSERT
-            Assert.Equal(3, count);
-            Assert.Equal(DataBaseSeed.SolarSystem1Id, systems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem1Id)).Id);
-            Assert.Equal(DataBaseSeed.SolarSystem2Id, systems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem2Id)).Id);
-            Assert.Equal(DataBaseSeed.SolarSystem3Id, systems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem3Id)).Id);
-        }
+        private readonly DatabaseFixture m_databaseFixture;
+        private readonly ISolarSystemRepository m_repository;
 
         [Fact]
-        public async void SearchWithPagination_Ok()
+        public async Task AddAndDeleteNewSolarSystem_Ok()
         {
-            //ACT
-            var (countNoOffset, systemsNoOffset) = await m_repository.SearchAsync(new Pagination
+            //Arrange
+            var id = Guid.NewGuid();
+            var system = new SolarSystem
             {
-                Take = 3,
-                Offset = 0
-            }, new Ordering(), new SolarSystemFilter());
+                Id = id,
+                Name = "Test"
+            };
 
-            var (countWithOffset, systemsWithOffset) = await m_repository.SearchAsync(new Pagination
+            //Act
+            await m_repository.CreateAsync(system);
+
+            //Assert
+            var (_, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
             {
-                Take = 3,
-                Offset = 2
-            }, new Ordering(), new SolarSystemFilter());
-
-            //ASSERT
-            Assert.Equal(3, countNoOffset);
-            Assert.Equal(3, systemsNoOffset.Count);
-
-            Assert.Equal(3, countWithOffset);
-            Assert.Single(systemsWithOffset);
-        }
-
-        [Fact]
-        public async void SearchWithOrdering_Ok()
-        {
-            //ACT
-            var (_, descResult) = await m_repository.SearchAsync(
-                new Pagination(),
-                new Ordering
-                {
-                    OrderBy = nameof(SolarSystem.Name),
-                    OrderDirection = OrderDirection.Desc
-                },
-                new SolarSystemFilter());
-
-            var (_, ascResult) = await m_repository.SearchAsync(
-                new Pagination(),
-                new Ordering
-                {
-                    OrderBy = nameof(SolarSystem.Name),
-                    OrderDirection = OrderDirection.Asc
-                },
-                new SolarSystemFilter());
-
-            //ASSERT
-            Assert.Equal(descResult.Count, ascResult.Count);
-            Assert.Equal(descResult.First().Id, ascResult.Last().Id);
-            Assert.Equal(descResult.First().Name, m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem3Id)).Name);
-            Assert.Equal(ascResult.First().Name, m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem1Id)).Name);
+                SearchTerm = id.ToString()
+            });
+            Assert.Equal(id, systems.First().Id);
+            Assert.Equal("Test", systems.First().Name);
+            await m_repository.DeleteAsync(system);
+            var (_, emptyResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            {
+                SearchTerm = id.ToString()
+            });
+            Assert.Empty(emptyResponse);
         }
 
         [Fact]
         public async void SearchWithFiltering_Ok()
         {
             //Arrange
-            var firstSolarSystem = m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem1Id));
-            var thirdSolarSystem = m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DataBaseSeed.SolarSystem3Id));
+            var firstSolarSystem = m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem1Id));
+            var thirdSolarSystem = m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem3Id));
 
             //ACT
             var (_, idFiltered) = await m_repository.SearchAsync(
@@ -127,32 +90,69 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
         }
 
         [Fact]
-        public async Task AddAndDeleteNewSolarSystem_Ok()
+        public async void SearchWithOrdering_Ok()
         {
-            //Arrange
-            var id = Guid.NewGuid();
-            var system = new SolarSystem
-            {
-                Id = id,
-                Name = "Test"
-            };
+            //ACT
+            var (_, descResult) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering
+                {
+                    OrderBy = nameof(SolarSystem.Name),
+                    OrderDirection = OrderDirection.Desc
+                },
+                new SolarSystemFilter());
 
-            //Act
-            await m_repository.CreateAsync(system);
+            var (_, ascResult) = await m_repository.SearchAsync(
+                new Pagination(),
+                new Ordering
+                {
+                    OrderBy = nameof(SolarSystem.Name),
+                    OrderDirection = OrderDirection.Asc
+                },
+                new SolarSystemFilter());
 
-            //Assert
-            var (_, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+            //ASSERT
+            Assert.Equal(descResult.Count, ascResult.Count);
+            Assert.Equal(descResult.First().Id, ascResult.Last().Id);
+            Assert.Equal(descResult.First().Name, m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem3Id)).Name);
+            Assert.Equal(ascResult.First().Name, m_databaseFixture.DataContext.SolarSystems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem1Id)).Name);
+        }
+
+        [Fact]
+        public async void SearchWithPagination_Ok()
+        {
+            //ACT
+            var (countNoOffset, systemsNoOffset) = await m_repository.SearchAsync(new Pagination
             {
-                SearchTerm = id.ToString()
-            });
-            Assert.Equal(id, systems.First().Id);
-            Assert.Equal("Test", systems.First().Name);
-            await m_repository.DeleteAsync(system);
-            var (_, emptyResponse) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter
+                Take = 3,
+                Offset = 0
+            }, new Ordering(), new SolarSystemFilter());
+
+            var (countWithOffset, systemsWithOffset) = await m_repository.SearchAsync(new Pagination
             {
-                SearchTerm = id.ToString()
-            });
-            Assert.Empty(emptyResponse);
+                Take = 3,
+                Offset = 2
+            }, new Ordering(), new SolarSystemFilter());
+
+            //ASSERT
+            Assert.Equal(3, countNoOffset);
+            Assert.Equal(3, systemsNoOffset.Count);
+
+            Assert.Equal(3, countWithOffset);
+            Assert.Single(systemsWithOffset);
+        }
+
+        [Fact]
+        public async void SimpleSearch_Ok()
+        {
+            //ACT
+            var (count, systems) = await m_repository.SearchAsync(new Pagination(), new Ordering(), new SolarSystemFilter());
+
+            //ASSERT
+            Assert.Equal(3, count);
+            Assert.Equal(DatabaseSeed.SolarSystem1Id, systems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem1Id)).Id);
+            Assert.Equal(DatabaseSeed.SolarSystem2Id, systems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem2Id)).Id);
+            Assert.Equal(DatabaseSeed.SolarSystem3Id, systems.First(t => t.Id.Equals(DatabaseSeed.SolarSystem3Id)).Id);
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             {
                 SearchTerm = id.ToString()
             });
-            
+
             //Assert
             Assert.Equal(id, updatedResponse.First().Id);
             Assert.Equal("Modified", updatedResponse.First().Name);

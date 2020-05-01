@@ -130,7 +130,7 @@ namespace Solaris.Web.SolarApi.Tests.RepositoriesTests
             Assert.Equal(6, countNoOffset);
             Assert.Equal(6, systemsNoOffset.Count);
             Assert.Equal(6, countWithOffset);
-            Assert.Equal(6, systemsWithOffset.Count);
+            Assert.Single(systemsWithOffset);
             Assert.Single((IEnumerable) systemsWithOffset);
         }
 

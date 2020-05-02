@@ -12,6 +12,9 @@ namespace Solaris.Web.SolarApi.Core.Extensions
     {
         public static async Task<bool> IsValidImageAsync(this Uri url)
         {
+            if (url == null)
+                return true;
+
             var fileStream = GetStreamFromUrl(url);
             fileStream.Seek(0, SeekOrigin.Begin);
             try

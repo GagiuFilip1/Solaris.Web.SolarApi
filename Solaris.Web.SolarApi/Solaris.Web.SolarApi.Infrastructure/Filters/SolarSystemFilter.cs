@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Filters
 {

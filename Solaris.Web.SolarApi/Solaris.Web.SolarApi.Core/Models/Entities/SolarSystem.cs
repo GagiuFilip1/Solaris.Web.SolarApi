@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
-using Solaris.Web.SolarApi.Core.Models.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
 namespace Solaris.Web.SolarApi.Core.Models.Entities
 {
     public class SolarSystem : IIdentifier, IValidEntity
     {
-        [Key] public Guid Id { get; set; }
-
         [Required]
         [Column(TypeName = "varchar(256)")]
         public SpaceCoordinates SpacePosition { get; set; }
@@ -23,6 +21,7 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
         [Required] public float DistanceToEarth { get; set; }
 
         public List<Planet> Planets { get; set; } = new List<Planet>();
+        [Key] public Guid Id { get; set; }
 
         public List<string> Validate()
         {

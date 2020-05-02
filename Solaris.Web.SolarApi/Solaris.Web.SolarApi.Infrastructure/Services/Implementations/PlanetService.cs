@@ -5,9 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
-using Solaris.Web.SolarApi.Core.Models.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
@@ -36,6 +37,8 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
                 var validationError = planet.Validate();
                 if (validationError.Any())
                     throw new ValidationException($"A validation exception was raised while trying to create a planet : {JsonConvert.SerializeObject(validationError, Formatting.Indented)}");
+                if (!await planet.ImageUrl.IsValidImageAsync())
+                    throw new ValidationException("The provided Image url is not a Valid Image");
                 await CheckSolarSystemExistsAsync(planet.SolarSystemId);
                 await m_repository.CreateAsync(planet);
             }
@@ -57,7 +60,9 @@ namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
             {
                 var validationError = planet.Validate();
                 if (validationError.Any())
-                    throw new ValidationException($"A validation exception was raised while trying to update a planet : {JsonConvert.SerializeObject(validationError, Formatting.Indented)}");
+                    throw new ValidationException($"A validation exception was raised while trying to create a planet : {JsonConvert.SerializeObject(validationError, Formatting.Indented)}");
+                if (!await planet.ImageUrl.IsValidImageAsync())
+                    throw new ValidationException("The provided Image url is not a Valid Image");
                 await EnsurePlanetExistAsync(planet.Id);
                 await CheckSolarSystemExistsAsync(planet.SolarSystemId);
                 await m_repository.UpdateAsync(planet);

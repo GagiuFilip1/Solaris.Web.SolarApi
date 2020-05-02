@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
 using Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations;

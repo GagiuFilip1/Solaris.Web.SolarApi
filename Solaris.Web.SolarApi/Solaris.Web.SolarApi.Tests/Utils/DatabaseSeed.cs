@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 
 namespace Solaris.Web.SolarApi.Tests.Utils
 {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
-using Solaris.Web.SolarApi.Core.Models.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
 namespace Solaris.Web.SolarApi.Core.Repositories.Interfaces
 {

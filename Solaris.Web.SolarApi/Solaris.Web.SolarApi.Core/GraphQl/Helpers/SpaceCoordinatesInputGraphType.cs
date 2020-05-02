@@ -1,6 +1,5 @@
-using System.Numerics;
 using GraphQL.Types;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 
 namespace Solaris.Web.SolarApi.Core.GraphQl.Helpers
 {
@@ -9,8 +8,8 @@ namespace Solaris.Web.SolarApi.Core.GraphQl.Helpers
         public SpaceCoordinatesInputGraphType()
         {
             Field(t => t.XCoordonate, false, typeof(FloatGraphType)).Description("The X Space Position");
-            Field(t => t.YCoordonate, false,  typeof(FloatGraphType)).Description("The Y Space Position");
-            Field(t => t.ZCoordonate, false,  typeof(FloatGraphType)).Description("The Z Space Position");
+            Field(t => t.YCoordonate, false, typeof(FloatGraphType)).Description("The Y Space Position");
+            Field(t => t.ZCoordonate, false, typeof(FloatGraphType)).Description("The Z Space Position");
         }
     }
 

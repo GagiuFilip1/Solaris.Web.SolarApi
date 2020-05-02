@@ -9,6 +9,7 @@ namespace Solaris.Web.SolarApi.Core.GraphQl.OutputObjects.Planet
             Field(x => x.Id, type: typeof(NonNullGraphType<GuidGraphType>));
             Field(x => x.Description);
             Field(x => x.Name);
+            Field(x => x.ImageUrl, true, typeof(UriGraphType)).Description("The url of the image of planet");
             Field(x => x.PlanetStatus).Description("The current exploration status over this planet (Unexplored = 0,ExplorationInProcess = 1,Habitable = 2,Uninhabitable = 3)");
             Field(x => x.SolarSystemId, type: typeof(NonNullGraphType<GuidGraphType>)).Description("The id of the solar system this planet is located");
             Field(x => x.PlanetRadius).Description("Represents the radius of the planet in km");

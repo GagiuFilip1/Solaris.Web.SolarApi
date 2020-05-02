@@ -1,6 +1,6 @@
 using System;
 
-namespace Solaris.Web.SolarApi.Core.Models.Helpers
+namespace Solaris.Web.SolarApi.Core.Models.Helpers.Commons
 {
     public class SpaceCoordinates
     {

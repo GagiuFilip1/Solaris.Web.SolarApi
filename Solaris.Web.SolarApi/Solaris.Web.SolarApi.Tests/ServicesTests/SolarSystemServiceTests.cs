@@ -5,8 +5,8 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Helpers;
-using Solaris.Web.SolarApi.Core.Models.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;
 using Solaris.Web.SolarApi.Infrastructure.Services.Implementations;
@@ -16,30 +16,14 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
 {
     public class SolarSystemServiceTests
     {
-        private readonly Mock<ISolarSystemRepository> m_repositoryMock;
-        private readonly SolarSystemService m_solarSystemService;
-
         public SolarSystemServiceTests()
         {
             m_repositoryMock = new Mock<ISolarSystemRepository>();
             m_solarSystemService = new SolarSystemService(m_repositoryMock.Object, new Mock<ILogger<SolarSystemService>>().Object);
         }
 
-        [Fact]
-        public async void CreateWithValidData_Ok()
-        {
-            //Act
-            await m_solarSystemService.CreateSolarSystemAsync(new SolarSystem
-            {
-                Id = Guid.NewGuid(),
-                Name = "A-1",
-                DistanceToEarth = 4.38F,
-                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
-            });
-
-            //Assert
-            m_repositoryMock.Verify(t => t.CreateAsync(It.IsAny<SolarSystem>()), Times.Once);
-        }
+        private readonly Mock<ISolarSystemRepository> m_repositoryMock;
+        private readonly SolarSystemService m_solarSystemService;
 
         [Fact]
         public async void CreateWithInvalidNameAndDistance_Throws()
@@ -96,35 +80,10 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
         }
 
         [Fact]
-        public async void UpdateWithValidData_Ok()
+        public async void CreateWithValidData_Ok()
         {
-            //Arrange
-            var solarSystem = new SolarSystem
-            {
-                Id = Guid.NewGuid(),
-                Name = "A-1",
-                DistanceToEarth = 4.38F,
-                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
-            };
-            m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
-                .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
-
             //Act
-            await m_solarSystemService.UpdateSolarSystemAsync(solarSystem);
-
-            //Assert
-            m_repositoryMock.Verify(t => t.UpdateAsync(It.IsAny<SolarSystem>()), Times.Once);
-        }
-
-        [Fact]
-        public async void UpdateInvalidSolarSystem_Throws()
-        {
-            //Arrange
-            m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
-                .ReturnsAsync(new Tuple<int, List<SolarSystem>>(0, new List<SolarSystem>()));
-
-            //Act
-            var solarSystemDoesNotExist = m_solarSystemService.UpdateSolarSystemAsync(new SolarSystem
+            await m_solarSystemService.CreateSolarSystemAsync(new SolarSystem
             {
                 Id = Guid.NewGuid(),
                 Name = "A-1",
@@ -133,7 +92,7 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             });
 
             //Assert
-            await Assert.ThrowsAsync<ValidationException>(async () => await solarSystemDoesNotExist);
+            m_repositoryMock.Verify(t => t.CreateAsync(It.IsAny<SolarSystem>()), Times.Once);
         }
 
         [Fact]
@@ -195,6 +154,47 @@ namespace Solaris.Web.SolarApi.Tests.ServicesTests
             m_repositoryMock.Verify(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<SolarSystemFilter>()), Times.Once);
             Assert.Equal(1, count);
             Assert.Equal(solarSystem, solarSystems.First());
+        }
+
+        [Fact]
+        public async void UpdateInvalidSolarSystem_Throws()
+        {
+            //Arrange
+            m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
+                .ReturnsAsync(new Tuple<int, List<SolarSystem>>(0, new List<SolarSystem>()));
+
+            //Act
+            var solarSystemDoesNotExist = m_solarSystemService.UpdateSolarSystemAsync(new SolarSystem
+            {
+                Id = Guid.NewGuid(),
+                Name = "A-1",
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
+            });
+
+            //Assert
+            await Assert.ThrowsAsync<ValidationException>(async () => await solarSystemDoesNotExist);
+        }
+
+        [Fact]
+        public async void UpdateWithValidData_Ok()
+        {
+            //Arrange
+            var solarSystem = new SolarSystem
+            {
+                Id = Guid.NewGuid(),
+                Name = "A-1",
+                DistanceToEarth = 4.38F,
+                SpacePosition = new SpaceCoordinates(12323.54F, 53432.24F, 23131.01F)
+            };
+            m_repositoryMock.Setup(t => t.SearchAsync(It.IsAny<Pagination>(), It.IsAny<Ordering>(), It.IsAny<IFilter<SolarSystem>>()))
+                .ReturnsAsync(new Tuple<int, List<SolarSystem>>(1, new List<SolarSystem> {solarSystem}));
+
+            //Act
+            await m_solarSystemService.UpdateSolarSystemAsync(solarSystem);
+
+            //Assert
+            m_repositoryMock.Verify(t => t.UpdateAsync(It.IsAny<SolarSystem>()), Times.Once);
         }
     }
 }

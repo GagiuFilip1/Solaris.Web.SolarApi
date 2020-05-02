@@ -9,6 +9,7 @@ namespace Solaris.Web.SolarApi.Core.GraphQl.InputObjects.Planet
             Field(x => x.Id, type: typeof(NonNullGraphType<IdGraphType>)).Description("The id of the planet to be updated");
             Field(x => x.Name, true);
             Field(x => x.Description, true);
+            Field(x => x.ImageUrl, true, typeof(UriGraphType)).Description("The url of the image of planet");
             Field(x => x.PlanetStatus, true).Description("The current exploration status over this planet (Unexplored = 0,ExplorationInProcess = 1,Habitable = 2,Uninhabitable = 3)");
             Field(x => x.PlanetRadius, true).Description("Represents the radius of the planet in km");
             Field(x => x.GravityForce, true).Description("Represents the gravity force of the planet in m/s^2");

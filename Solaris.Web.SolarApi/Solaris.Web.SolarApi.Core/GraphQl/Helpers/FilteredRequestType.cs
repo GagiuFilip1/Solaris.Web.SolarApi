@@ -1,5 +1,5 @@
 using GraphQL.Types;
-using Solaris.Web.SolarApi.Core.Models.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
 namespace Solaris.Web.SolarApi.Core.GraphQl.Helpers
 {

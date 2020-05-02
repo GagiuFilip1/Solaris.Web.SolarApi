@@ -14,6 +14,7 @@ using Pomelo.EntityFrameworkCore.MySql.Storage;
 using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.GraphQl.Root;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
+using Solaris.Web.SolarApi.Infrastructure.Rabbit;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Ioc
 {
@@ -38,7 +39,8 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
                     b => b.MigrationsAssembly(assembly)
                         .ServerVersion(new ServerVersion(new Version(5, 7, 12)))
                         .CharSet(CharSet.Latin1)
-                ));
+                )
+            );
         }
 
         public static void InjectForNamespace(this IServiceCollection collection, string nameSpace)
@@ -90,9 +92,16 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
                         Services.AddTransient(typeToRegister.GetInterfaces().First(), typeToRegister);
                     break;
                 default:
-                    Services.AddSingleton(typeToRegister.GetInterfaces().First(), typeToRegister);
+                    Services.AddScoped(typeToRegister.GetInterfaces().First(), typeToRegister);
                     break;
             }
+        }
+
+        public static void InjectRabbitMq(this IServiceCollection collection)
+        {
+            var assembly = Assembly.Load("Solaris.Web.SolarApi.Infrastructure");
+            assembly.GetTypesForPath("Solaris.Web.SolarApi.Infrastructure.Rabbit").Select(t => t.UnderlyingSystemType).ToList().ForEach(RegisterType);
+            collection.BuildServiceProvider().GetRequiredService<RabbiHandler>();
         }
 
         public static void InjectGraphQl(this IServiceCollection collection)
@@ -115,12 +124,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
             coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.Helpers").ForEach(p =>
             {
                 RuntimeHelpers.RunClassConstructor(p.TypeHandle);
-                collection.AddScoped(p.UnderlyingSystemType);
+                RegisterType(p.UnderlyingSystemType);
             });
 
-            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.InputObjects").ForEach(p => { collection.AddScoped(p.UnderlyingSystemType); });
+            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.InputObjects").ForEach(p => RegisterType(p.UnderlyingSystemType));
 
-            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.OutputObjects").ForEach(p => { collection.AddScoped(p.UnderlyingSystemType); });
+            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.OutputObjects").ForEach(p => RegisterType(p.UnderlyingSystemType));
 
             var enumGraphType = typeof(EnumerationGraphType<>);
             coreAssembly.GetEnumsForPath("Solaris.Web.SolarApi.Core.Enums").ForEach(p =>

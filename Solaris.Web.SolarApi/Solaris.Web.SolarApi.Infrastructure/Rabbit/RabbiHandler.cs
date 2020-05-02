@@ -7,17 +7,20 @@ using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
 {
-    [RegistrationKind(Type = RegistrationType.Singleton, AsSelf = true)]
-    public class RabbitConfigurator
+    [RegistrationKind(Type = RegistrationType.Scoped, AsSelf = true)]
+    public class RabbiHandler
     {
         private readonly AppSettings m_appSettings;
+        private readonly IEnumerable<IProcessor> m_processors;
         private readonly RabbitServer m_server;
 
-        public RabbitConfigurator(IOptions<AppSettings> appSettings, RabbitServer server, IEnumerable<IProcessor> processors)
+        public RabbiHandler(IOptions<AppSettings> appSettings, RabbitServer server, IEnumerable<IProcessor> processors)
         {
             m_server = server;
             m_appSettings = appSettings.Value;
-            SetProcessors(processors);
+            m_processors = processors;
+            SetProcessors();
+            InitialiseRpcQueues();
         }
 
         private void InitialiseRpcQueues()
@@ -29,9 +32,9 @@ namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
             });
         }
 
-        private void SetProcessors(IEnumerable<IProcessor> processors)
+        private void SetProcessors()
         {
-            foreach (var processor in processors) m_server.Processors.TryAdd(processor.Type, processor.ProcessAsync);
+            foreach (var processor in m_processors) m_server.Processors.TryAdd(processor.Type, processor.ProcessAsync);
         }
     }
 }

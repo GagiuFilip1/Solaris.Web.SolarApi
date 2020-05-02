@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
-using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit;
 using Solaris.Web.SolarApi.Infrastructure.Data;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
-using Solaris.Web.SolarApi.Infrastructure.Rabbit;
 
 namespace Solaris.Web.SolarApi.Presentation
 {
@@ -18,7 +16,6 @@ namespace Solaris.Web.SolarApi.Presentation
         private const string MIGRATION_ASSEMBLY = "Solaris.Web.SolarApi.Presentation";
         private const string REPOSITORIES_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations";
         private const string SERVICES_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Services.Implementations";
-        private const string RABBIT_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Rabbit";
 
         public Startup(IConfiguration configuration)
         {
@@ -35,18 +32,13 @@ namespace Solaris.Web.SolarApi.Presentation
             services.InjectMySqlDbContext<DataContext>(Configuration[CONNECTION_STRING_PATH], MIGRATION_ASSEMBLY);
             services.InjectForNamespace(REPOSITORIES_NAMESPACE);
             services.InjectForNamespace(SERVICES_NAMESPACE);
-            services.InjectForNamespace(RABBIT_NAMESPACE);
+            services.InjectRabbitMq();
             services.InjectGraphQl();
         }
 
-        public void Configure(IApplicationBuilder app, RabbitServer server)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseGraphQL<ISchema>();
-        }
-
-        private void DeclareQueues(RabbitServer server)
-        {
-            server.DeclareRpcQueue(new QueueSetup());
         }
     }
 }

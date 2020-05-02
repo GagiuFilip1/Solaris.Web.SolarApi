@@ -15,7 +15,7 @@ using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
 {
-    [RegistrationKind(Type = RegistrationType.Singleton, AsSelf = true)]
+    [RegistrationKind(Type = RegistrationType.Scoped, AsSelf = true)]
     public class RabbitServer
     {
         private readonly AppSettings m_appSettings;

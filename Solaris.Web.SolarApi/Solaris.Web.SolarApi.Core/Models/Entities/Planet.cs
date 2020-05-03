@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using Solaris.Web.SolarApi.Core.Enums;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
@@ -39,7 +41,7 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
 
         [Required] public Guid SolarSystemId { get; set; }
 
-        public SolarSystem SolarSystem { get; set; }
+        [JsonIgnore] [IgnoreDataMember] public SolarSystem SolarSystem { get; set; }
         [Key] public Guid Id { get; set; }
 
         public List<string> Validate()

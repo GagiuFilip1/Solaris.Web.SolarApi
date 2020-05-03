@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
@@ -20,7 +21,7 @@ namespace Solaris.Web.SolarApi.Core.Models.Entities
 
         [Required] public float DistanceToEarth { get; set; }
 
-        public List<Planet> Planets { get; set; } = new List<Planet>();
+        [JsonIgnore] public List<Planet> Planets { get; set; } = new List<Planet>();
         [Key] public Guid Id { get; set; }
 
         public List<string> Validate()

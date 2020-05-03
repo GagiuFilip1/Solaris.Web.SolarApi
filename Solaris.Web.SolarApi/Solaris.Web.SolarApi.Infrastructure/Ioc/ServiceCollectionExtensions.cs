@@ -101,7 +101,7 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
         {
             var assembly = Assembly.Load("Solaris.Web.SolarApi.Infrastructure");
             assembly.GetTypesForPath("Solaris.Web.SolarApi.Infrastructure.Rabbit").Select(t => t.UnderlyingSystemType).ToList().ForEach(RegisterType);
-            collection.BuildServiceProvider().GetRequiredService<RabbiHandler>();
+            collection.BuildServiceProvider().GetRequiredService<RabbitWrapper>();
         }
 
         public static void InjectGraphQl(this IServiceCollection collection)
@@ -124,12 +124,12 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
             coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.Helpers").ForEach(p =>
             {
                 RuntimeHelpers.RunClassConstructor(p.TypeHandle);
-                RegisterType(p.UnderlyingSystemType);
+                collection.AddScoped(p.UnderlyingSystemType);
             });
 
-            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.InputObjects").ForEach(p => RegisterType(p.UnderlyingSystemType));
+            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.InputObjects").ForEach(p => { collection.AddScoped(p.UnderlyingSystemType); });
 
-            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.OutputObjects").ForEach(p => RegisterType(p.UnderlyingSystemType));
+            coreAssembly.GetTypesForPath("Solaris.Web.SolarApi.Core.GraphQl.OutputObjects").ForEach(p => { collection.AddScoped(p.UnderlyingSystemType); });
 
             var enumGraphType = typeof(EnumerationGraphType<>);
             coreAssembly.GetEnumsForPath("Solaris.Web.SolarApi.Core.Enums").ForEach(p =>
@@ -141,7 +141,6 @@ namespace Solaris.Web.SolarApi.Infrastructure.Ioc
 
             GraphTypeTypeRegistry.Register(typeof(OrderDirection), enumGraphType.MakeGenericType(typeof(OrderDirection)));
             GraphTypeTypeRegistry.Register(typeof(Guid), typeof(GuidGraphType));
-            GraphTypeTypeRegistry.Register(typeof(Uri), typeof(UriGraphType));
 
             collection.AddGraphQL(opt => { opt.ExposeExceptions = true; })
                 .AddGraphTypes(ServiceLifetime.Scoped)

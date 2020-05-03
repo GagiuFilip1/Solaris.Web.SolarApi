@@ -19,7 +19,7 @@ namespace Solaris.Web.SolarApi.Core.GraphQl.OutputObjects.Planet
             Field(x => x.TemperatureDay).Description("The planet temperature on the hemisphere facing the sun, measured in Celsius");
             Field(x => x.TemperatureNight).Description("The planet temperature on the hemisphere not facing the sun, measured in Celsius");
             Field(x => x.WaterPercentage).Description("The planet water percentage that can be found on the crust and near it");
-            Field(x => x.PlanetSurfaceMagneticField).Description("The Planet Magnetic field strength measured in Ampere/m (A/m)");
+            Field(x => x.PlanetSurfaceMagneticField).Description("The Planet Magnetic field strength measured in Gauss");
             Field(x => x.AverageSolarWindVelocity).Description("The average speed of solar winds hitting the atmosphere of the planet");
         }
     }

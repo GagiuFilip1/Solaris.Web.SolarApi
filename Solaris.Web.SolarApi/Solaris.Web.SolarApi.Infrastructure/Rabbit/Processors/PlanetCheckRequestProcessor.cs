@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Solaris.Web.SolarApi.Core.Enums;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
-using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit.Responses;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Rabbit;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Filters;

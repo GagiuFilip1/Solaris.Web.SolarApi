@@ -1,4 +1,4 @@
-namespace Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit
+namespace Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit.Setup
 {
     public class QueueSetup
     {

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Enums;
-using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit;
+using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit.Responses;
 
 namespace Solaris.Web.SolarApi.Core.Models.Interfaces.Rabbit
 {

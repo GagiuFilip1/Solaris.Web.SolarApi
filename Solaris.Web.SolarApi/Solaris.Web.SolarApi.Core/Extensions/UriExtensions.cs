@@ -15,7 +15,7 @@ namespace Solaris.Web.SolarApi.Core.Extensions
             if (url == null)
                 return true;
 
-            var fileStream = GetStreamFromUrl(url);
+            await using var fileStream = GetStreamFromUrl(url);
             fileStream.Seek(0, SeekOrigin.Begin);
             try
             {
@@ -28,7 +28,6 @@ namespace Solaris.Web.SolarApi.Core.Extensions
             }
             catch
             {
-                await fileStream.DisposeAsync();
                 return false;
             }
         }

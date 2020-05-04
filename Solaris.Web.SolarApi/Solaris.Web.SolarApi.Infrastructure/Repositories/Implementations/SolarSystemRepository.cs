@@ -5,6 +5,7 @@ using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models.Entities;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Data;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;

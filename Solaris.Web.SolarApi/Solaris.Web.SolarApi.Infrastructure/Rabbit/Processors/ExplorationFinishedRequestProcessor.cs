@@ -14,11 +14,11 @@ using Solaris.Web.SolarApi.Infrastructure.Ioc;
 namespace Solaris.Web.SolarApi.Infrastructure.Rabbit.Processors
 {
     [RegistrationKind(Type = RegistrationType.Scoped)]
-    public class ExplorationFinishedProcessor : IProcessor
+    public class ExplorationFinishedRequestProcessor : IProcessor
     {
         private readonly IPlanetService m_planetService;
 
-        public ExplorationFinishedProcessor(IPlanetService planetService)
+        public ExplorationFinishedRequestProcessor(IPlanetService planetService)
         {
             m_planetService = planetService;
         }

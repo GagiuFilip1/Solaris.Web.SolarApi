@@ -1,6 +1,7 @@
 using System.Linq;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
 
-namespace Solaris.Web.SolarApi.Core.Models.Interfaces.Commons
+namespace Solaris.Web.SolarApi.Core.Models.Interfaces.Filters
 {
     public interface IFilter<TEntity> where TEntity : IIdentifier
     {

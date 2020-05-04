@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Models.Entities;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters;
 
 namespace Solaris.Web.SolarApi.Core.Services.Interfaces
 {

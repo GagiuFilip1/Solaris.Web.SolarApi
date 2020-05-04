@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models.Entities;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Filters
 {

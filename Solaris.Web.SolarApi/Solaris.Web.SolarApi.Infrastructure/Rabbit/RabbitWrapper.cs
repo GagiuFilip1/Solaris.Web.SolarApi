@@ -35,11 +35,6 @@ namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
                 Qos = 10,
                 QueueName = m_appSettings.RabbitMqQueues.ExplorationQueue
             });
-            m_handler.DeclareQueue(new QueueSetup
-            {
-                Qos = 10,
-                QueueName = m_appSettings.RabbitMqQueues.CrewApiQueue
-            });
         }
 
         private void SetProcessors()

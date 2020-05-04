@@ -7,16 +7,13 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Solaris.Web.SolarApi.Core.Models.Entities;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Commons;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Implementations;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
-using Solaris.Web.SolarApi.Infrastructure.Filters;
-using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
-namespace Solaris.Web.SolarApi.Infrastructure.Services.Implementations
+namespace Solaris.Web.SolarApi.Core.Services.Implementations
 {
-    [RegistrationKind(Type = RegistrationType.Scoped)]
     public class SolarSystemService : ISolarSystemService
     {
         private readonly ILogger<SolarSystemService> m_logger;

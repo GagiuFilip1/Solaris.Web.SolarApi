@@ -15,7 +15,7 @@ namespace Solaris.Web.SolarApi.Presentation
         private const string CONNECTION_STRING_PATH = "ConnectionStrings:SolarisApi";
         private const string MIGRATION_ASSEMBLY = "Solaris.Web.SolarApi.Presentation";
         private const string REPOSITORIES_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Repositories.Implementations";
-        private const string SERVICES_NAMESPACE = "Solaris.Web.SolarApi.Infrastructure.Services.Implementations";
+        private const string SERVICES_NAMESPACE = "Solaris.Web.SolarApi.Core.Services.Implementations";
 
         public Startup(IConfiguration configuration)
         {

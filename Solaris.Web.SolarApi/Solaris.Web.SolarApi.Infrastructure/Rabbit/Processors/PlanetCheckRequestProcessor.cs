@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using Solaris.Web.SolarApi.Core.Enums;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit.Responses;
+using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Implementations;
 using Solaris.Web.SolarApi.Core.Models.Interfaces.Rabbit;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
-using Solaris.Web.SolarApi.Infrastructure.Filters;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Rabbit.Processors

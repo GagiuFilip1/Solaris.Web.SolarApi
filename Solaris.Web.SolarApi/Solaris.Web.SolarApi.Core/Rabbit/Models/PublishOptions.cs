@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
+namespace Solaris.Web.SolarApi.Core.Rabbit.Models
 {
     public class PublishOptions
     {

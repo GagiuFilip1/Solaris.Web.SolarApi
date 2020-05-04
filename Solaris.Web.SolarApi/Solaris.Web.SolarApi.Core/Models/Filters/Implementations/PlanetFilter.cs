@@ -3,9 +3,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Solaris.Web.SolarApi.Core.Extensions;
 using Solaris.Web.SolarApi.Core.Models.Entities;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Interfaces;
+using Solaris.Web.SolarApi.Core.Models.Filters.Interfaces;
 
-namespace Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Implementations
+namespace Solaris.Web.SolarApi.Core.Models.Filters.Implementations
 {
     public class PlanetFilter : IFilter<Planet>
     {

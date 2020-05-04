@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Solaris.Web.SolarApi.Core.Enums;
+using Solaris.Web.SolarApi.Core.Models.Filters.Implementations;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
-using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit.Responses;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Implementations;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Rabbit;
+using Solaris.Web.SolarApi.Core.Rabbit.Helpers.Responses;
+using Solaris.Web.SolarApi.Core.Rabbit.Interfaces;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
 

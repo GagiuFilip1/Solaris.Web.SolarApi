@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
-using Solaris.Web.SolarApi.Core.Models.Helpers.Rabbit.Setup;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Rabbit;
+using Solaris.Web.SolarApi.Core.Rabbit.Helpers.Setup;
+using Solaris.Web.SolarApi.Core.Rabbit.Interfaces;
 using Solaris.Web.SolarApi.Infrastructure.Ioc;
 
 namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
@@ -11,10 +11,10 @@ namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
     public class RabbitWrapper
     {
         private readonly AppSettings m_appSettings;
-        private readonly RabbitHandler m_handler;
+        private readonly IRabbitHandler m_handler;
         private readonly IEnumerable<IProcessor> m_processors;
 
-        public RabbitWrapper(IOptions<AppSettings> appSettings, RabbitHandler handler, IEnumerable<IProcessor> processors)
+        public RabbitWrapper(IOptions<AppSettings> appSettings, IRabbitHandler handler, IEnumerable<IProcessor> processors)
         {
             m_handler = handler;
             m_appSettings = appSettings.Value;

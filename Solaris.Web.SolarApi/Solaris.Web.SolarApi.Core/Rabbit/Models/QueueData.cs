@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
+namespace Solaris.Web.SolarApi.Core.Rabbit.Models
 {
     public class QueueData : IDisposable
     {

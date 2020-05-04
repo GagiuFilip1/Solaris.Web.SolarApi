@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Solaris.Web.SolarApi.Core.Enums;
 
-namespace Solaris.Web.SolarApi.Infrastructure.Rabbit
+namespace Solaris.Web.SolarApi.Core.Rabbit.Models
 {
     public class ListenOptions
     {

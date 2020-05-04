@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Solaris.Web.SolarApi.Core.Models.Entities;
+using Solaris.Web.SolarApi.Core.Models.Filters.Implementations;
+using Solaris.Web.SolarApi.Core.Models.Filters.Interfaces;
 using Solaris.Web.SolarApi.Core.Models.Helpers.Commons;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Implementations;
-using Solaris.Web.SolarApi.Core.Models.Interfaces.Filters.Interfaces;
 using Solaris.Web.SolarApi.Core.Repositories.Interfaces;
 using Solaris.Web.SolarApi.Core.Services.Interfaces;
 

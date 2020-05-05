@@ -40,7 +40,7 @@ Mandatory Environment variables are:
 - APPSETTINGS__RABBITMQ__PASSWORD
 - APPSETTINGS__RABBITMQ__PORT
 - APPSETTINGS__RABBITMQ__USERNAME
-- CONNECTIONSTRINGS__CREW_API
+- CONNECTIONSTRINGS__SOLAR_API
 
 Other optional Env Variables can be added to override the fields in the appSettings.json file.
 
